@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.WrongParameterException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserRepository;
@@ -49,9 +48,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(UserDto userDto, long userId) {
         findUserById(userId);
-        if ((userDto.getName() == null) & (userDto.getEmail() == null)) {
+        /*if ((userDto.getName() == null) & (userDto.getEmail() == null)) {
             throw new WrongParameterException("Нет данных для обновления");
-        }
+        }*/
         userDto.setId(userId);
         User user = UserMapper.toUserUpdate(userDto);
         return UserMapper.toUserDto(userRepository.update(user));

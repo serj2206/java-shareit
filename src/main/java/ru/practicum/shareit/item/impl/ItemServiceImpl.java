@@ -43,7 +43,7 @@ public class ItemServiceImpl implements ItemSevice {
     }
 
     @Override
-    public Collection<ItemDto> findItemDtoAll(long userId){
+    public Collection<ItemDto> findItemDtoAll(long userId) {
         List<Item> items = new ArrayList<>(itemRepository.findItemAll(userId));
         return items.stream()
                 .map(ItemMapper::toItemDto)
