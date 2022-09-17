@@ -8,7 +8,11 @@ import ru.practicum.shareit.exception.WrongParameterException;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -47,15 +51,24 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User update(User user) {
+
         //Проверка на оригинальность email
-        int count = (int) users.values().stream()
-                .filter(user1 -> {return user1.getEmail().equals(user.getEmail()) && !Objects.equals(user1.getId(), user.getId());})
-                .count();
-        if (count >= 1) {
+       /*if ((users.values().stream()
+                .filter(user1 -> user1.getEmail().equals(user.getEmail()))
+                .filter(user1 -> user1.getId() != user.getId()).count()) != 0) {
             throw new ValidationException("Указанный e-mail уже зарегистрирован другим пользователем.");
+        }*/
+
+        List<User> userList = (users.values().stream()
+                .filter(user1 -> user1.getEmail().equals(user.getEmail()))
+                .collect(Collectors.toList()));
+        for (User u : userList) {
+            if (u.getId() != user.getId()) {
+                throw new ValidationException("Указанный e-mail уже зарегистрирован другим пользователем.");
+            }
         }
 
-        //Если имя пустое, то взять имя из БД
+       //Если имя пустое, то взять имя из БД
         if (user.getName() == null) {
             user.setName(users.get(user.getId()).getName());
         }
