@@ -8,10 +8,7 @@ import ru.practicum.shareit.exception.WrongParameterException;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -52,7 +49,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User update(User user) {
         //Проверка на оригинальность email
         int count = (int) users.values().stream()
-                .filter(user1 -> user1.getEmail().equals(user.getEmail()) && user1.getId() != user.getId())
+                .filter(user1 -> {return user1.getEmail().equals(user.getEmail()) && !Objects.equals(user1.getId(), user.getId());})
                 .count();
         if (count >= 1) {
             throw new ValidationException("Указанный e-mail уже зарегистрирован другим пользователем.");
