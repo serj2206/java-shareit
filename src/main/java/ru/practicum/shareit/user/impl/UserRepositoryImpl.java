@@ -50,11 +50,11 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User update(User user) {
-
         //Проверка на оригинальность email
-        if ((users.values().stream()
-                .filter(user1 -> user1.getEmail().equals(user.getEmail()))
-                .filter(user1 -> user1.getId() != user.getId()).count()) != 0) {
+        int count = (int) users.values().stream()
+                .filter(user1 -> user1.getEmail().equals(user.getEmail()) && user1.getId() != user.getId())
+                .count();
+        if (count >= 1) {
             throw new ValidationException("Указанный e-mail уже зарегистрирован другим пользователем.");
         }
 
