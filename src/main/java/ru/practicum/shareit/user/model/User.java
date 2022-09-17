@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Builder
 public class User {
-    Long id;
+    long id;
     String name;
     String email;
 }

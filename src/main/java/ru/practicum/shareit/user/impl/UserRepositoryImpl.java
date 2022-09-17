@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user.impl;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.ValidationException;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -51,24 +49,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User update(User user) {
-
         //Проверка на оригинальность email
-       /*if ((users.values().stream()
+        if ((users.values().stream()
                 .filter(user1 -> user1.getEmail().equals(user.getEmail()))
                 .filter(user1 -> user1.getId() != user.getId()).count()) != 0) {
             throw new ValidationException("Указанный e-mail уже зарегистрирован другим пользователем.");
-        }*/
-
-        List<User> userList = (users.values().stream()
-                .filter(user1 -> user1.getEmail().equals(user.getEmail()))
-                .collect(Collectors.toList()));
-        for (User u : userList) {
-            if (u.getId() != user.getId()) {
-                throw new ValidationException("Указанный e-mail уже зарегистрирован другим пользователем.");
-            }
         }
 
-       //Если имя пустое, то взять имя из БД
+        //Если имя пустое, то взять имя из БД
         if (user.getName() == null) {
             user.setName(users.get(user.getId()).getName());
         }
