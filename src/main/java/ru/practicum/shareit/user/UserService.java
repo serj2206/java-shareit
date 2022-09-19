@@ -2,10 +2,11 @@ package ru.practicum.shareit.user;
 
 import ru.practicum.shareit.user.dto.UserDto;
 
-import java.util.List;
+import java.util.Collection;
+
 
 public interface UserService {
-    List<UserDto> findAll();
+    Collection<UserDto> findAll();
 
     UserDto findUserById(long id);
 
