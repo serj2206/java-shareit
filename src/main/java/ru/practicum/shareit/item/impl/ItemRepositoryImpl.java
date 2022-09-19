@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.WrongParameterException;
 import ru.practicum.shareit.item.ItemRepository;
@@ -12,10 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
-    Map<Long, Item> items = new HashMap<>();
+    private final Map<Long, Item> items = new HashMap<>();
     private long id = 0;
 
     @Override

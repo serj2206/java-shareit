@@ -1,8 +1,8 @@
 package ru.practicum.shareit.user.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.WrongParameterException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserRepository;
@@ -10,10 +10,9 @@ import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -27,8 +26,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll() {
-        List<User> users = userRepository.findAll();
+    public Collection<UserDto> findAll() {
+        Collection<User> users = userRepository.findAll();
         return users.stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
@@ -47,10 +46,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserDto userDto, long userId) {
-        findUserById(userId);
-        /*if ((userDto.getName() == null) & (userDto.getEmail() == null)) {
+        if ((userDto.getName() == null) && (userDto.getEmail() == null)) {
             throw new WrongParameterException("Нет данных для обновления");
-        }*/
+        }
+        findUserById(userId);
         userDto.setId(userId);
         User user = UserMapper.toUserUpdate(userDto);
         return UserMapper.toUserDto(userRepository.update(user));
@@ -61,6 +60,4 @@ public class UserServiceImpl implements UserService {
         itemRepository.deleteItemsByIdUser(userId);
         return UserMapper.toUserDto(userRepository.delete(userId));
     }
-
-
 }

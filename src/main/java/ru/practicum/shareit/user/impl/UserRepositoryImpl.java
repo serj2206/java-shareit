@@ -7,24 +7,22 @@ import ru.practicum.shareit.exception.WrongParameterException;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Component
 
 public class UserRepositoryImpl implements UserRepository {
-
-    final Map<Long, User> users = new HashMap<>();
-    long id = 0;
+    private final Map<Long, User> users = new HashMap<>();
+    private long id = 0;
 
 
     @Override
-    public List<User> findAll() {
+    public Collection<User> findAll() {
         log.debug("UserRepositoryImpl: Запрос списка пользователей");
-        return new ArrayList<>(users.values());
+        return users.values();
     }
 
     @Override
@@ -81,13 +79,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private long getId() {
-        /*if (users.isEmpty()) {
-            return ++id;
-        }
-        id = users.values().stream().
-                max((u1, u2) -> (int) (u1.getId() - u2.getId()))
-                .get()
-                .getId();*/
         return ++id;
     }
 

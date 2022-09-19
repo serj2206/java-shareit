@@ -11,18 +11,16 @@ import javax.validation.constraints.Pattern;
 
 @Data
 public class UserDto {
-
-    long id;
+    private long id;
 
     @Pattern(regexp = "^\\S*$", groups = {Create.class, Update.class})
     @NotNull(groups = {Create.class})
     @NotBlank(groups = {Create.class})
-    String name;
+    private String name;
 
     @Email(groups = {Create.class, Update.class})
     @NotNull(groups = {Create.class})
-
-    String email;
+    private String email;
 
     public UserDto(long id, String name, String email) {
         this.id = id;

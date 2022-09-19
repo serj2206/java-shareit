@@ -9,26 +9,23 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 public class ItemDto {
-    long id;
+    private long id;
 
     @Pattern(regexp = "^\\S*$", groups = {Create.class, Update.class})
     @NotNull(groups = {Create.class})
     @NotBlank(groups = {Create.class, Update.class})
-    String name;
+    private String name;
 
 
     @NotNull(groups = {Create.class})
     @NotBlank(groups = {Create.class, Update.class})
-    String description;
+    private String description;
 
     @AssertTrue(groups = {Create.class})
     @NotNull(groups = {Create.class})
-    Boolean available;
+    private Boolean available;
 
    //Long requestId;
 

@@ -10,9 +10,6 @@ import ru.practicum.shareit.marker.Create;
 
 import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Slf4j
 @RestController
 @RequestMapping("/items")
@@ -28,27 +25,28 @@ public class ItemController {
     @PostMapping
     public ItemDto create(@RequestHeader("X-Sharer-User-Id") long userId,
                           @Validated({Create.class}) @RequestBody ItemDto itemDto) {
-        log.info("ItemController: POST_request create()");
+        log.info("ItemController: POST_request, create(), userId = {}, itemDto = {}", userId, itemDto);
         return itemService.create(userId, itemDto);
     }
 
     @GetMapping("/{itemId}")
     public ItemDto findItemDtoById(@RequestHeader("X-Sharer-User-Id") long userId,
                                    @PathVariable long itemId) {
-        log.info("ItemController: POST_request create()");
+        log.info("ItemController: GET_request, findItemDtoById(), userId = {}, itemId = {}", userId, itemId);
         if (itemId <= 0) throw new ValidationException("ID вещи должен быть положительным");
         return itemService.findItemDtoById(itemId);
     }
 
     @GetMapping
     public Collection<ItemDto> findItemDtoAll(@RequestHeader("X-Sharer-User-Id") long userId) {
+        log.info("ItemController: GET_request, findItemDtoAll(), userID = {}", userId);
         return itemService.findItemDtoAll(userId);
     }
 
     @GetMapping("/search")
     public Collection<ItemDto> searchItems(@RequestHeader("X-Sharer-User-Id") long userId,
                                            @RequestParam String text) {
-        log.info("GET-запрос searchItems с параметром text = {}", text);
+        log.info("ItemController: GET_request, searchItems(), userId = {},  с параметром text = {}",userId, text);
         return itemService.searchItem(text);
     }
 
@@ -56,7 +54,7 @@ public class ItemController {
     public ItemDto update(@RequestHeader("X-Sharer-User-Id") long userId,
                           @PathVariable long itemId,
                           @RequestBody ItemDto itemDto) {
-        log.info("Запрос на обновление вещи userId = {}, itemId = {}, itemDto = {}", userId, itemId, itemDto);
+        log.info("ItemController: PATCH_request, update(), userId = {}, itemId = {}, itemDto = {}", userId, itemId, itemDto);
         if (itemId <= 0) throw new ValidationException("ID вещи должен быть положительным");
         return itemService.update(userId, itemId, itemDto);
     }
@@ -64,10 +62,8 @@ public class ItemController {
     @DeleteMapping("/{itemId}")
     public ItemDto delete(@RequestHeader("X-Sharer-User-Id") long userId,
                           @PathVariable long itemId) {
-        log.info("Запрос на удаление вещи userId = {}, itemId = {}", userId, itemId);
+        log.info("ItemController: DELETE_request, delete(), userId = {}, itemId = {}", userId, itemId);
         if (itemId <= 0) throw new ValidationException("ID вещи должен быть положительным");
         return itemService.delete(userId, itemId);
     }
-
-
 }

@@ -9,11 +9,8 @@ import ru.practicum.shareit.marker.Create;
 import ru.practicum.shareit.marker.Update;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import java.util.List;
+import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Slf4j
 @RestController
 @RequestMapping(path = "/users")
@@ -27,20 +24,20 @@ public class UserController {
     }
 
     @PostMapping
-    private UserDto create(@Validated({Create.class}) @RequestBody UserDto userDto) {
-        log.info("POST create {}", userDto);
+    public UserDto create(@Validated({Create.class}) @RequestBody UserDto userDto) {
+        log.info("UserController: POST_request create() userDto = {}", userDto);
         return userService.create(userDto);
     }
 
     @GetMapping
-    private List<UserDto> findAll() {
-        log.info("UserController: Запрос списка пользователей");
+    public Collection<UserDto> findAll() {
+        log.info("UserController: GET_request findAll()");
         return userService.findAll();
     }
 
     @GetMapping("/{userId}")
-    private UserDto findUserById(@Validated({Update.class}) @PathVariable long userId) {
-        log.info("UserController: Запрос данных пользователя с id = {}", userId);
+    public UserDto findUserById(@Validated({Update.class}) @PathVariable long userId) {
+        log.info("UserController: GET_request, findUserById(), userId = {}", userId);
         if (userId <= 0) {
             throw new ValidationException("ID должен быть положительным");
         }
@@ -48,9 +45,9 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    private UserDto update(@PathVariable long userId,
+    public UserDto update(@PathVariable long userId,
                         @Validated({Update.class}) @RequestBody UserDto userDto) {
-        log.info("UserController: Запрос на обновление данных пользователя с id = {}  userDto = {}", userId, userDto);
+        log.info("UserController: PATCH_request, update() usrId = {}, userDto = {}", userId, userDto);
         if (userId <= 0) {
             throw new ValidationException("ID должен быть положительным");
         }
@@ -58,12 +55,11 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    private UserDto delete(@PathVariable long userId) {
-        log.info("UserController: Запрос на удаление данных пользователя с id = {}", userId);
+    public UserDto delete(@PathVariable long userId) {
+        log.info("UserController: DELETE_request с userId = {}", userId);
         if (userId <= 0) {
             throw new ValidationException("ID должен быть положительным");
         }
         return userService.delete(userId);
     }
-
 }
