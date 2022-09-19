@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.exception.WrongParameterException;
@@ -11,7 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
+
 @Component
 
 public class UserRepositoryImpl implements UserRepository {
@@ -21,7 +20,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Collection<User> findAll() {
-        log.debug("UserRepositoryImpl: Запрос списка пользователей");
         return users.values();
     }
 
