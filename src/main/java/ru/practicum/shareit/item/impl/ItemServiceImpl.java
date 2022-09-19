@@ -12,7 +12,6 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +41,7 @@ public class ItemServiceImpl implements ItemSevice {
 
     @Override
     public Collection<ItemDto> findItemDtoAll(long userId) {
-        List<Item> items = new ArrayList<>(itemRepository.findItemAll(userId));
+        Collection<Item> items = new ArrayList<>(itemRepository.findItemAll(userId));
         return items.stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
