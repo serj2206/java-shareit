@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.impl.ItemServiceImpl;
 import ru.practicum.shareit.marker.Create;
@@ -29,12 +30,20 @@ public class ItemController {
         return itemService.create(userId, itemDto);
     }
 
+    @PostMapping("/{itemId}/comment")
+        public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
+                                     @PathVariable long itemId,
+                                     @Validated({Create.class}) @RequestBody CommentDto commentDto) {
+        log.info("ItemController: POST_request, addComment(), userId = {}, itemId = {}, commentDto = {}", userId, itemId, commentDto);
+        return itemService.addComment(userId, itemId, commentDto);
+    }
+
     @GetMapping("/{itemId}")
     public ItemDto findItemDtoById(@RequestHeader("X-Sharer-User-Id") long userId,
                                    @PathVariable long itemId) {
         log.info("ItemController: GET_request, findItemDtoById(), userId = {}, itemId = {}", userId, itemId);
         if (itemId <= 0) throw new ValidationException("ID вещи должен быть положительным");
-        return itemService.findItemDtoById(itemId);
+        return itemService.findItemDtoById(itemId, userId);
     }
 
     @GetMapping
@@ -46,7 +55,7 @@ public class ItemController {
     @GetMapping("/search")
     public Collection<ItemDto> searchItems(@RequestHeader("X-Sharer-User-Id") long userId,
                                            @RequestParam String text) {
-        log.info("ItemController: GET_request, searchItems(), userId = {},  с параметром text = {}",userId, text);
+        log.info("ItemController: GET_request, searchItems(), userId = {}, с параметром text = {}",userId, text);
         return itemService.searchItem(text);
     }
 

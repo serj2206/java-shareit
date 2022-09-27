@@ -2,8 +2,8 @@ package ru.practicum.shareit.user.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.WrongParameterException;
-import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserService;
@@ -16,15 +16,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final ItemRepository itemRepository;
-
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ItemRepository itemRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<UserDto> findAll() {
         Collection<User> users = userRepository.findAll();
@@ -33,31 +31,44 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDto findUserById(long id) {
-        return UserMapper.toUserDto(userRepository.findUserById(id));
+        User user = userRepository.findById(id).orElseThrow();
+        return UserMapper.toUserDto(user);
     }
 
+    @Transactional
     @Override
     public UserDto create(UserDto userDto) {
         User user = UserMapper.toUserCreate(userDto);
-        return UserMapper.toUserDto(userRepository.create(user));
+        return UserMapper.toUserDto(userRepository.save(user));
     }
 
+    @Transactional
     @Override
     public UserDto update(UserDto userDto, long userId) {
         if ((userDto.getName() == null) && (userDto.getEmail() == null)) {
             throw new WrongParameterException("Нет данных для обновления");
         }
-        findUserById(userId);
-        userDto.setId(userId);
-        User user = UserMapper.toUserUpdate(userDto);
-        return UserMapper.toUserDto(userRepository.update(user));
+        User userFromDb = userRepository.findById(userId).orElseThrow();
+        User userUpdate = UserMapper.toUserUpdate(userDto);
+
+        if (userUpdate.getName() != null) {
+            userFromDb.setName(userUpdate.getName());
+        }
+
+        if (userUpdate.getEmail() != null) {
+            userFromDb.setEmail(userUpdate.getEmail());
+        }
+        return UserMapper.toUserDto(userRepository.save(userFromDb));
     }
 
+    @Transactional
     @Override
     public UserDto delete(long userId) {
-        itemRepository.deleteItemsByIdUser(userId);
-        return UserMapper.toUserDto(userRepository.delete(userId));
+        User user = userRepository.findById(userId).orElseThrow();
+        userRepository.delete(user);
+        return UserMapper.toUserDto(user);
     }
 }

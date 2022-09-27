@@ -4,7 +4,6 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.Collection;
 
-
 public interface UserService {
     Collection<UserDto> findAll();
 
