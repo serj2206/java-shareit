@@ -1,6 +1,6 @@
 package ru.practicum.shareit.user.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.WrongParameterException;
@@ -14,13 +14,9 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Transactional(readOnly = true)
     @Override
@@ -52,6 +48,7 @@ public class UserServiceImpl implements UserService {
             throw new WrongParameterException("Нет данных для обновления");
         }
         User userFromDb = userRepository.findById(userId).orElseThrow();
+        userDto.setId(userId);
         User userUpdate = UserMapper.toUserUpdate(userDto);
 
         if (userUpdate.getName() != null) {

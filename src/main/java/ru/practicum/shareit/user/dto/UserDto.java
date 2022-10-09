@@ -1,17 +1,18 @@
 package ru.practicum.shareit.user.dto;
 
+
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.marker.Create;
 import ru.practicum.shareit.marker.Update;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 @Data
+@NoArgsConstructor
 public class UserDto {
-    private long id;
+    @Null(groups = {Create.class})
+    private Long id;
 
     @Pattern(regexp = "^\\S*$", groups = {Create.class, Update.class})
     @NotNull(groups = {Create.class})
@@ -20,6 +21,7 @@ public class UserDto {
 
     @Email(groups = {Create.class, Update.class})
     @NotNull(groups = {Create.class})
+    @NotBlank(groups = {Create.class})
     private String email;
 
     public UserDto(long id, String name, String email) {

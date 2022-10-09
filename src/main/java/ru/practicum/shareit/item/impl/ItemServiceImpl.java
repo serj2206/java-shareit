@@ -1,10 +1,14 @@
 package ru.practicum.shareit.item.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.common.FromSizeRequest;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.WrongParameterException;
 import ru.practicum.shareit.item.*;
@@ -12,6 +16,8 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequestRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
@@ -24,27 +30,29 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class ItemServiceImpl implements ItemSevice {
+@RequiredArgsConstructor
+public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
-
-    @Autowired
-    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository, BookingRepository bookingRepository, CommentRepository commentRepository) {
-        this.itemRepository = itemRepository;
-        this.userRepository = userRepository;
-        this.bookingRepository = bookingRepository;
-        this.commentRepository = commentRepository;
-    }
+    private final ItemRequestRepository itemRequestRepository;
 
     @Transactional
     @Override
     public ItemDto create(long userId, ItemDto itemDto) {
         User user = userRepository.findById(userId).orElseThrow();
+
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner(user);
+
+        Long requestId = itemDto.getRequestId();
+        if (requestId != null && requestId > 0) {
+            ItemRequest request = itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow();
+            item.setRequest(request);
+        }
+
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
@@ -80,9 +88,22 @@ public class ItemServiceImpl implements ItemSevice {
 
     @Transactional(readOnly = true)
     @Override
-    public Collection<ItemDto> findItemDtoAll(long userId) {
-        Collection<Item> items = new ArrayList<>(itemRepository.findItemByOwnerId(userId));
-        Collection<ItemDto> itemDtoList = items.stream()
+    public Collection<ItemDto> findItemDtoAll(long userId, Integer from, Integer size) {
+
+        Collection<ItemDto> itemDtoList;
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        Pageable pageable;
+
+        //Если size == null возвращаем всё
+        if (size == null) {
+            pageable = null;
+        } else {
+            //Иначе постранично
+            pageable = FromSizeRequest.of(from, size, sortById);
+        }
+
+        Page<Item> itemPage = itemRepository.findItemByOwnerId(userId, pageable);
+        itemDtoList = itemPage.stream()
                 .sorted((item1, item2) -> (int) (item1.getId() - item2.getId()))
                 .map(ItemMapper::toItemDto)
                 .map(this::findBookingByNextAndLast)
@@ -96,9 +117,16 @@ public class ItemServiceImpl implements ItemSevice {
     @Transactional()
     @Override
     public ItemDto update(long userId, long itemId, ItemDto itemDto) {
+
         itemDto.setId(itemId);
 
         Item itemUpdate = ItemMapper.toItem(itemDto);
+        Long requestId = itemDto.getRequestId();
+        if (requestId != null && requestId > 0) {
+            ItemRequest request = itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow();
+            itemUpdate.setRequest(request);
+        }
+
         Item itemFromDb = itemRepository.findById(itemId).orElseThrow();
 
         if (itemFromDb.getOwner().getId() != userId) {
@@ -123,9 +151,21 @@ public class ItemServiceImpl implements ItemSevice {
 
     @Transactional(readOnly = true)
     @Override
-    public Collection<ItemDto> searchItem(String text) {
+    public List<ItemDto> searchItem(String text, Integer from, Integer size) {
+
         if (text.isEmpty()) return new ArrayList<>();
-        return itemRepository.searchItem(text).stream()
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        Pageable pageable;
+        //Если size == null ищем всё
+        if (size == null) {
+            pageable = null;
+        } else {
+            //иначе постранично
+            pageable = FromSizeRequest.of(from, size, sortById);
+        }
+        Page<Item> itemPage = itemRepository.searchItem(text, pageable);
+
+        return itemPage.stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
@@ -166,5 +206,6 @@ public class ItemServiceImpl implements ItemSevice {
                 .collect(Collectors.toList());
         return commentDtoList;
     }
+
 
 }
