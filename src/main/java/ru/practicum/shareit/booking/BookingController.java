@@ -42,15 +42,19 @@ public class BookingController {
 
     @GetMapping
     public Collection<BookingDto> findAllBookingDtoByBooker(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                            @RequestParam(defaultValue = "ALL") String state) {
-        log.info("BookingController GET findAllBookingDtoByBooker() userId = {}, state = {}", userId, state);
-        return bookingService.findAllBookingDtoByBookerId(userId, state);
+                                                            @RequestParam(defaultValue = "ALL") String state,
+                                                            @RequestParam(defaultValue = "1") Integer from,
+                                                            @RequestParam(required = false) Integer size) {
+        log.info("BookingController GET findAllBookingDtoByBooker() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
+        return bookingService.findAllBookingDtoByBookerId(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public Collection<BookingDto> findAllBookingDtoByOwner(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                            @RequestParam(defaultValue = "ALL") String state) {
-        log.info("BookingController GET findAllBookingDtoByOwner() userId = {}, state = {}", userId, state);
-        return bookingService.findAllBookingDtoByOwnerId(userId, state);
+                                                           @RequestParam(defaultValue = "ALL") String state,
+                                                           @RequestParam(defaultValue = "1") Integer from,
+                                                           @RequestParam(required = false) Integer size) {
+        log.info("BookingController GET findAllBookingDtoByOwner() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
+        return bookingService.findAllBookingDtoByOwnerId(userId, state, from, size);
     }
 }

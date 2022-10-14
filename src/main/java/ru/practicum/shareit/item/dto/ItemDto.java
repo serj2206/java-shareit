@@ -33,13 +33,15 @@ public class ItemDto {
 
     private List<CommentDto> comments = new ArrayList<>();
 
-    //Long requestId;
+    private Long requestId;
 
-    public ItemDto(long id, String name, String description, Boolean available) {
+    public ItemDto(long id, String name, String description, Boolean available, Long requestId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
+        this.requestId = requestId;
+
     }
 
     @Getter

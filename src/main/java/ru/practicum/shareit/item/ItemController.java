@@ -47,16 +47,20 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ItemDto> findItemDtoAll(@RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("ItemController: GET_request, findItemDtoAll(), userID = {}", userId);
-        return itemService.findItemDtoAll(userId);
+    public Collection<ItemDto> findItemDtoAll(@RequestHeader("X-Sharer-User-Id") long userId,
+                                              @RequestParam (defaultValue = "0") Integer from,
+                                              @RequestParam (required = false) Integer size) {
+        log.info("ItemController: GET_request, findItemDtoAll(), userID = {}, from = {}, size = {}", userId, from, size);
+        return itemService.findItemDtoAll(userId, from, size);
     }
 
     @GetMapping("/search")
     public Collection<ItemDto> searchItems(@RequestHeader("X-Sharer-User-Id") long userId,
-                                           @RequestParam String text) {
-        log.info("ItemController: GET_request, searchItems(), userId = {}, с параметром text = {}",userId, text);
-        return itemService.searchItem(text);
+                                           @RequestParam String text,
+                                           @RequestParam (defaultValue = "1") Integer from,
+                                           @RequestParam (required = false) Integer size) {
+        log.info("ItemController: GET_request, searchItems(), userId = {}, с параметрами text = {}, from = {}, size = {}",userId, text, from, size);
+        return itemService.searchItem(text, from, size);
     }
 
     @PatchMapping("/{itemId}")

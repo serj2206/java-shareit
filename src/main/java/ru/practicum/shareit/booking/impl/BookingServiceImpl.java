@@ -1,6 +1,9 @@
 package ru.practicum.shareit.booking.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingMapper;
@@ -12,13 +15,13 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.WrongParameterException;
+import ru.practicum.shareit.item.FromSizeRequest;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,30 +96,43 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public Collection<BookingDto> findAllBookingDtoByBookerId(Long userId, String state) {
-        User user = userRepository.findById(userId).orElseThrow();
-        List<Booking> bookingList;
+    public Collection<BookingDto> findAllBookingDtoByBookerId(Long userId, String state, Integer from, Integer size) {
+        if (size != null && (from < 0 || size < 0)) {
+            throw new BadRequestException("from или size имеют отрицательное значение");
+        }
+
+        userRepository.findById(userId).orElseThrow();
+        Page<Booking> bookingList;
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        Pageable pageable;
+
+        if (size == null) {
+            pageable = null;
+        } else {
+            pageable = FromSizeRequest.of(from, size, sortById);
+        }
 
         switch (state) {
             case "ALL":
-                bookingList = bookingRepository.findAllBookingByBookerIdALL(userId);
+                bookingList = bookingRepository.findAllBookingByBookerIdALL(userId, pageable);
                 break;
             case "WAITING":
             case "REJECTED":
-                bookingList = bookingRepository.findAllBookingByBookerIdStatus(userId, state);
+                bookingList = bookingRepository.findAllBookingByBookerIdStatus(userId, state, pageable);
                 break;
             case "CURRENT":
-                bookingList = bookingRepository.findAllBookingByBookerIdCurrent(userId);
+                bookingList = bookingRepository.findAllBookingByBookerIdCurrent(userId, pageable);
                 break;
             case "PAST":
-                bookingList = bookingRepository.findAllBookingByBookerIdPast(userId);
+                bookingList = bookingRepository.findAllBookingByBookerIdPast(userId, pageable);
                 break;
             case "FUTURE":
-                bookingList = bookingRepository.findAllBookingByBookerIdFuture(userId);
+                bookingList = bookingRepository.findAllBookingByBookerIdFuture(userId, pageable);
                 break;
             default:
                 throw new BadRequestException("Unknown state: " + state);
         }
+
         return bookingList
                 .stream()
                 .map(BookingMapper::toBookingDto)
@@ -125,26 +141,40 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public Collection<BookingDto> findAllBookingDtoByOwnerId(Long userId, String state) {
-        User user = userRepository.findById(userId).orElseThrow();
-        List<Booking> bookingList;
+    public Collection<BookingDto> findAllBookingDtoByOwnerId(Long userId, String state, Integer from, Integer size) {
+
+        if (size != null && (from < 0 || size < 0)) {
+            throw new BadRequestException("from или size имеют отрицательное значение");
+        }
+
+        userRepository.findById(userId).orElseThrow();
+
+        Page<Booking> bookingList;
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        Pageable pageable;
+
+        if (size == null) {
+            pageable = null;
+        } else {
+            pageable = FromSizeRequest.of(from, size, sortById);
+        }
 
         switch (state) {
             case "ALL":
-                bookingList = bookingRepository.findAllBookingByOwnerIdALL(userId);
+                bookingList = bookingRepository.findAllBookingByOwnerIdALL(userId, pageable);
                 break;
             case "WAITING":
             case "REJECTED":
-                bookingList = bookingRepository.findAllBookingByOwnerIdStatus(userId, state);
+                bookingList = bookingRepository.findAllBookingByOwnerIdStatus(userId, state, pageable);
                 break;
             case "CURRENT":
-                bookingList = bookingRepository.findAllBookingByOwnerIdCurrent(userId);
+                bookingList = bookingRepository.findAllBookingByOwnerIdCurrent(userId, pageable);
                 break;
             case "PAST":
-                bookingList = bookingRepository.findAllBookingByOwnerIdPast(userId);
+                bookingList = bookingRepository.findAllBookingByOwnerIdPast(userId, pageable);
                 break;
             case "FUTURE":
-                bookingList = bookingRepository.findAllBookingByOwnerIdFuture(userId);
+                bookingList = bookingRepository.findAllBookingByOwnerIdFuture(userId, pageable);
                 break;
             default:
                 throw new BadRequestException("Unknown state: " + state);

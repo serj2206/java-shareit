@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.booking.model.Booking;
@@ -11,53 +13,53 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "select * from bookings " +
             "WHERE booker_id = ?1 AND status = ?2 " +
             "ORDER BY start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByBookerIdStatus(Long userId, String state);
+    Page<Booking> findAllBookingByBookerIdStatus(Long userId, String state, Pageable pageable);
 
     @Query(value = "select * from bookings " +
             "WHERE booker_id = ?1 " +
             "ORDER BY start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByBookerIdALL(Long userId);
+    Page<Booking> findAllBookingByBookerIdALL(Long userId, Pageable pageable);
 
     @Query(value = "select * from bookings " +
             "WHERE booker_id = ?1 AND (CURRENT_TIMESTAMP between start_date AND end_date) " +
             "ORDER BY start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByBookerIdCurrent(Long userId);
+    Page<Booking> findAllBookingByBookerIdCurrent(Long userId, Pageable pageable);
 
     @Query(value = "select * from bookings " +
             "WHERE booker_id = ?1 AND start_date > CURRENT_TIMESTAMP " +
             "ORDER BY start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByBookerIdFuture(Long userId);
+    Page<Booking> findAllBookingByBookerIdFuture(Long userId, Pageable pageable);
 
     @Query(value = "select * from bookings " +
             "WHERE booker_id = ?1 AND end_date < CURRENT_TIMESTAMP AND status = 'APPROVED' " +
             "ORDER BY start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByBookerIdPast(Long userId);
+    Page<Booking> findAllBookingByBookerIdPast(Long userId, Pageable pageable);
 
     //Owner
     @Query(value = "select b.*  FROM bookings AS b LEFT OUTER JOIN items AS i ON b.item_id = i.id " +
             "WHERE i.owner_id = ?1 AND b.status = ?2 " +
             "ORDER BY start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByOwnerIdStatus(Long userId, String state);
+    Page<Booking> findAllBookingByOwnerIdStatus(Long userId, String state, Pageable pageable);
 
     @Query(value = "select b.*  FROM bookings AS b LEFT OUTER JOIN items AS i ON b.item_id = i.id " +
             "WHERE i.owner_id = ?1 " +
             "ORDER BY start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByOwnerIdALL(Long userId);
+    Page<Booking> findAllBookingByOwnerIdALL(Long userId, Pageable pageable);
 
     @Query(value = "select b.* from bookings AS b LEFT OUTER JOIN items AS i ON b.item_id = i.id " +
             "WHERE i.owner_id = ?1 AND (CURRENT_TIMESTAMP between b.start_date AND b.end_date) " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByOwnerIdCurrent(Long userId);
+    Page<Booking> findAllBookingByOwnerIdCurrent(Long userId, Pageable pageable);
 
     @Query(value = "select b.* from bookings AS b LEFT OUTER JOIN items AS i ON b.item_id = i.id " +
             "WHERE i.owner_id = ?1 AND b.start_date > CURRENT_TIMESTAMP " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByOwnerIdFuture(Long userId);
+    Page<Booking> findAllBookingByOwnerIdFuture(Long userId, Pageable pageable);
 
     @Query(value = "select b.* from bookings AS b LEFT OUTER JOIN items AS i ON b.item_id = i.id " +
             "WHERE i.owner_id = ?1 AND b.end_date < CURRENT_TIMESTAMP AND b.status = 'APPROVED' " +
             "ORDER BY b.start_date DESC", nativeQuery = true)
-    List<Booking> findAllBookingByOwnerIdPast(Long userId);
+    Page<Booking> findAllBookingByOwnerIdPast(Long userId, Pageable pageable);
 
     @Query(value = "select b.* from " +
             "((SELECT b1.* from bookings AS b1 " +
