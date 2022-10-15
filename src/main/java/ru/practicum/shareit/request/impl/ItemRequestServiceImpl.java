@@ -5,8 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.common.FromSizeRequest;
 import ru.practicum.shareit.exception.BadRequestException;
-import ru.practicum.shareit.item.FromSizeRequest;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequestMapper;
@@ -29,6 +29,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
+    //Добавление запросов
     @Override
     public ItemRequestDto addItemRequest(ItemRequestDto itemRequestDto, long userId) {
 
@@ -42,6 +43,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return ItemRequestMapper.toItemRequestDto(itemRequestRepository.save(itemRequest));
     }
 
+    //Выгрузка своих запросов
     @Override
     public List<ItemRequestDto> findItemRequest(long userId) {
 
@@ -59,6 +61,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return itemRequestDtoList;
     }
 
+    //Добавление вещи к запросу - вспомогательный метод
     private ItemRequestDto addItemToRequest(ItemRequestDto itemRequestDto) {
         List<Item> itemList = itemRepository.findItemByRequestId(itemRequestDto.getId());
         for (Item item : itemList) {
@@ -67,6 +70,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return itemRequestDto;
     }
 
+    //Запросы других пользователей
     @Override
     public List<ItemRequestDto> findItemRequestByRequestorId(long userId, Integer from, Integer size) {
 
@@ -85,7 +89,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             pageable = FromSizeRequest.of(from, size, sort);
         }
 
-        Page<ItemRequest> itemRequestList = itemRequestRepository.findByRequestorIdNot(userId, pageable); //Сортировать по времени в БД
+        Page<ItemRequest> itemRequestList = itemRequestRepository.findByRequestorIdNot(userId, pageable);
 
         return itemRequestList.stream()
                 .map(ItemRequestMapper::toItemRequestDto)
@@ -93,6 +97,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .collect(Collectors.toList()); //Сортировать по времени в БД
     }
 
+    //Поиск определенного запрса
     @Override
     public ItemRequestDto findItemById(long userId, long id) {
         userRepository.findById(userId).orElseThrow();
