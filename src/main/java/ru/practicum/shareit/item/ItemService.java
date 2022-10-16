@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.Collection;
 
-public interface ItemSevice {
+public interface ItemService {
     ItemDto create(long userId, ItemDto itemDto);
 
     ItemDto findItemDtoById(long itemId, long userId);

@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
             throw new WrongParameterException("Нет данных для обновления");
         }
         User userFromDb = userRepository.findById(userId).orElseThrow();
+        userDto.setId(userId);
         User userUpdate = UserMapper.toUserUpdate(userDto);
 
         if (userUpdate.getName() != null) {

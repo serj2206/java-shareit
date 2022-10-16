@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class ItemServiceImpl implements ItemSevice {
+public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
@@ -131,6 +131,8 @@ public class ItemServiceImpl implements ItemSevice {
     @Transactional()
     @Override
     public ItemDto update(long userId, long itemId, ItemDto itemDto) {
+
+
         itemDto.setId(itemId);
 
         Item itemUpdate = ItemMapper.toItem(itemDto);
