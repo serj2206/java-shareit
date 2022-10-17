@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.exception.ValidationException;
 
 import java.util.Collection;
 
@@ -19,16 +20,18 @@ public class BookingController {
     }
 
     @PostMapping
-    public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long bookerId,
+    public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                     @RequestBody BookingDto bookingDto) {
-        log.info("BookingController POST createBooking() userId = {}, bookingDto = {}", bookerId, bookingDto);
-        return bookingService.create(bookerId, bookingDto);
+        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
+        log.info("BookingController POST createBooking() userId = {}, bookingDto = {}", userId, bookingDto);
+        return bookingService.create(userId, bookingDto);
     }
 
     @PatchMapping("/{bookingId}")
     public BookingDto approved(@RequestHeader("X-Sharer-User-Id") long userId,
                                @PathVariable long bookingId,
                                @RequestParam boolean approved) {
+        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("BookingController PATCH createBooking() userId = {}, bookingId = {}, approved = {}", userId, bookingId, approved);
         return bookingService.approved(userId, bookingId, approved);
     }
@@ -36,6 +39,7 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     public BookingDto findBookingById(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @PathVariable long bookingId) {
+        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("BookingController GET findBookingById() userId = {}, bookingId = {}", userId, bookingId);
         return bookingService.findBookingDtoById(bookingId, userId);
     }
@@ -45,6 +49,7 @@ public class BookingController {
                                                             @RequestParam(defaultValue = "ALL") String state,
                                                             @RequestParam(defaultValue = "1") Integer from,
                                                             @RequestParam(required = false) Integer size) {
+        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("BookingController GET findAllBookingDtoByBooker() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
         return bookingService.findAllBookingDtoByBookerId(userId, state, from, size);
     }
@@ -54,6 +59,7 @@ public class BookingController {
                                                            @RequestParam(defaultValue = "ALL") String state,
                                                            @RequestParam(defaultValue = "1") Integer from,
                                                            @RequestParam(required = false) Integer size) {
+        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("BookingController GET findAllBookingDtoByOwner() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
         return bookingService.findAllBookingDtoByOwnerId(userId, state, from, size);
     }

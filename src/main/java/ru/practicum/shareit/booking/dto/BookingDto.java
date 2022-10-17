@@ -5,6 +5,7 @@ import ru.practicum.shareit.booking.model.Status;
 
 import java.time.LocalDateTime;
 
+
 @Data
 public class BookingDto {
 
@@ -33,11 +34,18 @@ public class BookingDto {
         this.status = status;
     }
 
-    private void setStart(String string) {
+    public BookingDto() {};
+
+    public void setItemId(Long itemId) {
+        this.item = new Item();
+        this.item.setId(itemId);
+    }
+
+    public void setStart(String string) {
         this.start = LocalDateTime.parse(string);
     }
 
-    private void setEnd(String string) {
+    public void setEnd(String string) {
         this.end = LocalDateTime.parse(string);
     }
 

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.marker.Create;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
@@ -20,12 +21,14 @@ public class ItemRequestController {
     @PostMapping
     public ItemRequestDto addItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
                                          @Validated({Create.class}) @RequestBody ItemRequestDto itemRequestDto) {
+        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         return itemRequestService.addItemRequest(itemRequestDto, userId);
     }
 
     //Выгрузка свои запросов
     @GetMapping
     public List<ItemRequestDto> findItemRequest(@RequestHeader("X-Sharer-User-Id") long userId) {
+        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         return itemRequestService.findItemRequest(userId);
     }
 
@@ -36,6 +39,7 @@ public class ItemRequestController {
     public List<ItemRequestDto> findItemRequestByRequestorId(@RequestHeader("X-Sharer-User-Id") long userId,
                                                       @RequestParam (defaultValue = "0")  Integer from,
                                                       @RequestParam (required = false) Integer size) {
+        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("ItemRequestController: GET_request findItemRequestByRequestorId() userID = {}, from = {}, size ={}", userId, from, size);
         return itemRequestService.findItemRequestByRequestorId(userId, from, size);
     }
@@ -44,6 +48,7 @@ public class ItemRequestController {
     @GetMapping("/{requestId}")
     public ItemRequestDto findItemRequestById(@RequestHeader("X-Sharer-User-Id") long userId,
                                               @PathVariable long requestId) {
+        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         return itemRequestService.findItemById(userId, requestId);
     }
 }

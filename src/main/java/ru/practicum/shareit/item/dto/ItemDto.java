@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ItemDto {
-    private long id;
+    private Long id;
 
     @NotNull(groups = {Create.class})
     @NotBlank(groups = {Create.class})

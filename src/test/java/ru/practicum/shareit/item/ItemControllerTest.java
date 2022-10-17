@@ -44,7 +44,8 @@ public class ItemControllerTest {
         itemDto.setDescription("descriptionItem1");
         itemDto.setAvailable(true);
 
-        when(itemService.create(1L, itemDto)).thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
+        when(itemService.create(1L, itemDto))
+                .thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
         //Act
         mockMvc.perform(post("/items")
                         .content(mapper.writeValueAsString(itemDto))
