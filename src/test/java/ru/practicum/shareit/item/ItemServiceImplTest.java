@@ -73,7 +73,7 @@ public class ItemServiceImplTest {
                 .thenReturn(item);
 
         //Act
-        ItemDto result = itemService.create(1L, itemDto);
+        ItemDto result = itemService.create(userId, itemDto);
 
         //Assert
         assertThat(result).isNotNull();

@@ -34,10 +34,12 @@ public class BookingDto {
         this.status = status;
     }
 
-    public BookingDto() {};
+    public BookingDto() {
+        this.item = new Item();
+        this.booker = new Booker();
+    }
 
     public void setItemId(Long itemId) {
-        this.item = new Item();
         this.item.setId(itemId);
     }
 

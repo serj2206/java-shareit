@@ -82,7 +82,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             pageable = null;
         } else {
             //Постраничная выгрузка для конкретного пользователя
-            if (from < 0 || size < 0) {
+            if (from < 0 || size <= 0) {
                 throw new BadRequestException("Значения парметров не корректны");
             }
 
