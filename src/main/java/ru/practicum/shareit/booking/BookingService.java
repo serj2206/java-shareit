@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking;
 
 import ru.practicum.shareit.booking.dto.BookingDto;
 
-import java.util.Collection;
+import java.util.List;
 
 
 public interface BookingService {
@@ -13,7 +13,7 @@ public interface BookingService {
 
     BookingDto findBookingDtoById(Long bookingId, Long userId);
 
-    Collection<BookingDto> findAllBookingDtoByBookerId(Long userId, String state, Integer from, Integer size);
+    List<BookingDto> findAllBookingDtoByBookerId(Long userId, String state, Integer from, Integer size);
 
-    Collection<BookingDto> findAllBookingDtoByOwnerId(Long userId, String state, Integer from, Integer size);
+    List<BookingDto> findAllBookingDtoByOwnerId(Long userId, String state, Integer from, Integer size);
 }

@@ -166,8 +166,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public Collection<ItemDto> searchItem(String text, Integer from, Integer size) {
-        if (size != null && (from < 0 || size < 0)) {
+    public List<ItemDto> searchItem(String text, Integer from, Integer size) {
+        if (size != null && (from < 0 || size <= 0)) {
             throw new BadRequestException("from или size имеют отрицательное значение");
         }
 

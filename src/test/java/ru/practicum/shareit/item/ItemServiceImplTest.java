@@ -2,10 +2,14 @@ package ru.practicum.shareit.item;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.impl.ItemServiceImpl;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -16,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class ItemServiceImplTest {
@@ -28,6 +33,9 @@ public class ItemServiceImplTest {
     private User user1;
     private ItemRequest itemRequest1;
     private Item item;
+
+    private Comment comment;
+    private CommentDto commentDto;
 
 
     @BeforeEach
@@ -54,6 +62,16 @@ public class ItemServiceImplTest {
         item.setDescription("item1Description1");
         item.setOwner(user1);
         item.setAvailable(true);
+
+        commentDto = new CommentDto();
+        commentDto.setText("comment");
+
+        comment = new Comment();
+        comment.setId(1L);
+        comment.setText("comment");
+        comment.setItem(item);
+        comment.setAuthor(user1);
+        comment.setCreated(LocalDateTime.now());
     }
 
     @Test
@@ -114,4 +132,73 @@ public class ItemServiceImplTest {
         assertThat(result.getAvailable()).isEqualTo(true);
         assertThat(result.getRequestId()).isEqualTo(1L);
     }
+
+    @Test
+    public void addCommentTest() {
+        //Accept
+        Mockito.when(bookingRepository.findByItem_IdAndBooker_IdAndStatus(item.getId(), user1.getId(), "APPROVED"))
+                .thenReturn(1L);
+        Mockito.when(itemRepository.findById(item.getId()))
+                .thenReturn(Optional.of(item));
+        Mockito.when(userRepository.findById(user1.getId()))
+                .thenReturn(Optional.of(user1));
+        Mockito.when(commentRepository.save(Mockito.any()))
+                .thenReturn(comment);
+        //Act
+        CommentDto result = itemService.addComment(user1.getId(), item.getId(), commentDto);
+
+        //Assert
+
+        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getText()).isEqualTo(comment.getText());
+    }
+
+    @Test
+    public void addCommentWhenCommentIsNullTest() {
+        //Accept
+        Mockito.when(bookingRepository.findByItem_IdAndBooker_IdAndStatus(item.getId(), user1.getId(), "APPROVED"))
+                .thenReturn(null);
+
+        //Act
+        BadRequestException exception = assertThrows(BadRequestException.class, new Executable() {
+            @Override
+            public void execute() {
+                itemService.addComment(user1.getId(), item.getId(), commentDto);
+            }
+        });
+
+        //Assert
+        assertThat(exception.getMessage()).isEqualTo("Нет прав для комментирования этой вещи");
+    }
+
+    @Test
+    public void addCommentWhenCommentIsZeroTest() {
+        //Accept
+        Mockito.when(bookingRepository.findByItem_IdAndBooker_IdAndStatus(item.getId(), user1.getId(), "APPROVED"))
+                .thenReturn(0L);
+
+        //Act
+        BadRequestException exception = assertThrows(BadRequestException.class, new Executable() {
+            @Override
+            public void execute() {
+                itemService.addComment(user1.getId(), item.getId(), commentDto);
+            }
+        });
+
+        //Assert
+        assertThat(exception.getMessage()).isEqualTo("Нет прав для комментирования этой вещи");
+    }
+
+    @Test
+    public void deleteTest() {
+        //Accept
+        Mockito.when(itemRepository.findById(item.getId()))
+                .thenReturn(Optional.of(item));
+        //Act
+        ItemDto result = itemService.delete(user1.getId(), item.getId());
+
+        //Assert
+        assertThat(result.getId()).isEqualTo(item.getId());
+    }
+
 }

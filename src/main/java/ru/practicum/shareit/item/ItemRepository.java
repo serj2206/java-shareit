@@ -11,10 +11,9 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findItemByOwnerId(long userId, Pageable pageable);
 
-    @Query(value = "select it.id, " +
-            "it.name, it.description, it.available, it.owner_id, it.request_id " +
-            "from items as it " +
-            "WHERE (it.name ilike concat ('%', ?1, '%') OR it.description ilike concat ('%', ?1, '%') ) " +
+    @Query(value = "SELECT it.* " +
+            "FROM items AS it " +
+            "WHERE (it.name ilike concat ('%', ?1, '%') OR it.description ILIKE concat ('%', ?1, '%')) " +
             "AND it.available = true " +
             "ORDER BY it.id", nativeQuery = true)
     Page<Item> searchItem(String text, Pageable pageable);

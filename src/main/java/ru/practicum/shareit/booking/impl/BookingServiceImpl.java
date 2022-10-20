@@ -21,7 +21,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,7 +96,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public Collection<BookingDto> findAllBookingDtoByBookerId(Long userId, String state, Integer from, Integer size) {
+    public List<BookingDto> findAllBookingDtoByBookerId(Long userId, String state, Integer from, Integer size) {
+
         if (size != null && (from < 0 || size < 0)) {
             throw new BadRequestException("from или size имеют отрицательное значение");
         }
@@ -141,7 +142,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public Collection<BookingDto> findAllBookingDtoByOwnerId(Long userId, String state, Integer from, Integer size) {
+    public List<BookingDto> findAllBookingDtoByOwnerId(Long userId, String state, Integer from, Integer size) {
 
         if (size != null && (from < 0 || size < 0)) {
             throw new BadRequestException("from или size имеют отрицательное значение");

@@ -45,9 +45,11 @@ public class IntegrationTest {
     private final ItemRequestService itemRequestService;
 
 
+    //ItemService
     @Order(10)
     @Test
     public void createdItemTest() {
+        //Accept
         UserDto userDto = new UserDto();
         userDto.setName("user1");
         userDto.setEmail("user1@email.ru");
@@ -58,7 +60,10 @@ public class IntegrationTest {
         itemDto.setDescription("description1");
         itemDto.setAvailable(true);
 
+        //Act
         ItemDto itemDtoResult = itemService.create(userDtoResult.getId(), itemDto);
+
+        //Assert
         assertThat(itemDtoResult).isNotNull();
         assertThat(itemDtoResult.getId()).isEqualTo(1L);
         assertThat(itemDtoResult.getName()).isEqualTo(itemDto.getName());
@@ -160,6 +165,7 @@ public class IntegrationTest {
         assertThat(exception.getMessage()).isEqualTo("from или size имеют отрицательное значение");
     }
 
+
     @Order(40)
     @Test
     public void updateTest() {
@@ -212,17 +218,73 @@ public class IntegrationTest {
         assertThat(itemDtoResult.getAvailable()).isEqualTo(itemDto.getAvailable());
     }
 
+    @Order(43)
+    @Test
+    public void updateUserBadTest() {
+        ItemDto itemDto = new ItemDto();
+        itemDto.setAvailable(true);
+
+        WrongParameterException exception
+                = assertThrows(WrongParameterException.class, new Executable() {
+            @Override
+            public void execute() {
+                itemService.update(3L, 2L, itemDto);
+                ;
+            }
+        });
+        assertThat(exception.getMessage())
+                .isEqualTo("Редактирование не доступно. Нет прав");
+    }
+
+    @Order(44)
+    @Test
+    public void searchItemTest() {
+        //Act
+        List<ItemDto> resultList = itemService.searchItem("descr", 0, 1);
+        //Assert
+        assertThat(resultList.size()).isEqualTo(1);
+    }
+
+    @Order(45)
+    @Test
+    public void searchItemSizeIsNullTest() {
+        //Act
+        List<ItemDto> resultList = itemService.searchItem("descr", 0, null);
+        //Assert
+        assertThat(resultList.size()).isEqualTo(2);
+    }
+
+    @Order(46)
+    @Test
+    public void searchItemSizeIsNegativeTest() {
+        //Act
+        BadRequestException exception = assertThrows(BadRequestException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                itemService.searchItem("descr", -1, 1);
+            }
+        });
+
+
+        //Assert
+        assertThat(exception.getMessage()).isEqualTo("from или size имеют отрицательное значение");
+    }
+
+    //UserService
     @Order(50)
     @Test
     public void findAllTest() {
+        //Accept
 
         UserDto userDto2 = new UserDto();
         userDto2.setName("user2");
         userDto2.setEmail("use2@email.ru");
         userService.create(userDto2);
 
+        //Act
         List<UserDto> resultList = new ArrayList<>(userService.findAll());
 
+        //Assert
         assertThat(resultList.size()).isEqualTo(2);
     }
 
@@ -235,6 +297,7 @@ public class IntegrationTest {
         assertThat(userDtoResult.getId()).isEqualTo(1L);
     }
 
+    //Booking
     @Order(60)
     @Test
     public void createdBookingTest() {
@@ -353,6 +416,169 @@ public class IntegrationTest {
 
     }
 
+    @Order(66)
+    @Test
+    public void findAllBookingDtoByBookerIdAllTest() {
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setStart(LocalDateTime.now().plusDays(6).toString());
+        bookingDto.setEnd(LocalDateTime.now().plusDays(8).toString());
+        bookingDto.setItemId(2L);
+
+        bookingService.create(2L, bookingDto);
+
+        List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "ALL", 0, 2);
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Order(67)
+    @Test
+    public void findAllBookingDtoByBookerIdWhenWattingTest() {
+        bookingService.approved(1L, 1L, false);
+        List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "WAITING", 0, 2);
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    @Order(68)
+    @Test
+    public void findAllBookingDtoByBookerIdWhenRejectedTest() {
+
+        List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "REJECTED", 0, 2);
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByBookerIdWhenPastTest() {
+
+        List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "PAST", 0, 2);
+        assertThat(result.size()).isEqualTo(0);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByBookerIdWhenFutureTest() {
+
+        List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "FUTURE", 0, 2);
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByBookerIdWhenCurrentTest() {
+
+        List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "CURRENT", 0, 2);
+        assertThat(result.size()).isEqualTo(0);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByBookerIdWhenFromNegativeTest() {
+        BadRequestException badRequestException =
+                assertThrows(BadRequestException.class, new Executable() {
+                    @Override
+                    public void execute() {
+                        bookingService.findAllBookingDtoByBookerId(2L, "CURRENT", -1, 2);
+                    }
+                });
+        assertThat(badRequestException.getMessage())
+                .isEqualTo("from или size имеют отрицательное значение");
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByBookerIdWhenFromNullTest() {
+        List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "FUTURE", 0, null);
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByBookerIdWhenStateBadTest() {
+        BadRequestException badRequestException =
+                assertThrows(BadRequestException.class, new Executable() {
+                    @Override
+                    public void execute() {
+                        bookingService.findAllBookingDtoByBookerId(2L, "BAD", 0, 2);
+                    }
+                });
+        assertThat(badRequestException.getMessage())
+                .isEqualTo("Unknown state: BAD");
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByOwnerIdALLTest() {
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "ALL", 0, null);
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByOwnerIdWaitingTest() {
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "WAITING", 0, null);
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByOwnerIdRejectedTest() {
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "REJECTED", 0, null);
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByOwnerIdCurrentTest() {
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "CURRENT", 0, null);
+        assertThat(result.size()).isEqualTo(0);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByOwnerIdPastTest() {
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "PAST", 0, null);
+        assertThat(result.size()).isEqualTo(0);
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByOwnerIdFutureTest() {
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "FUTURE", 0, null);
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Order(69)
+    @Test
+    public void indAllBookingDtoByOwnerIdWhenFromNegativeTest() {
+        BadRequestException badRequestException =
+                assertThrows(BadRequestException.class, new Executable() {
+                    @Override
+                    public void execute() {
+                        bookingService.findAllBookingDtoByOwnerId(1L, "CURRENT", -1, 2);
+                    }
+                });
+        assertThat(badRequestException.getMessage())
+                .isEqualTo("from или size имеют отрицательное значение");
+    }
+
+    @Order(69)
+    @Test
+    public void findAllBookingDtoByOwnerIdWhenStateBadTest() {
+        BadRequestException badRequestException =
+                assertThrows(BadRequestException.class, new Executable() {
+                    @Override
+                    public void execute() {
+                        bookingService.findAllBookingDtoByOwnerId(1L, "BAD", 0, 2);
+                    }
+                });
+        assertThat(badRequestException.getMessage())
+                .isEqualTo("Unknown state: BAD");
+    }
+
+
+
+
+    //ItemRequest
     @Order(70)
     @Test
     public void findItemRequestByRequestorIdTest() {
@@ -442,6 +668,32 @@ public class IntegrationTest {
 
     }
 
+    @Order(90)
+    @Test
+    public void findBookingByNextAndLastTest() {
+        BookingDto bookingDto1 = new BookingDto();
+        bookingDto1.setStart(LocalDateTime.now().plusDays(9).toString());
+        bookingDto1.setEnd(LocalDateTime.now().plusDays(10).toString());
+        bookingDto1.setItemId(2L);
+        bookingDto1 = bookingService.create(2L, bookingDto1);
+
+        BookingDto bookingDto2 = new BookingDto();
+        bookingDto2.setStart(LocalDateTime.now().plusDays(15).toString());
+        bookingDto2.setEnd(LocalDateTime.now().plusDays(20).toString());
+        bookingDto2.setItemId(2L);
+        bookingDto2 = bookingService.create(2L, bookingDto2);
+
+        bookingService.approved(1L, bookingDto1.getId(), true);
+        bookingService.approved(1L, bookingDto2.getId(), true);
+
+        ItemDto itemDto = itemService.findItemDtoById(2L, 1L);
+
+        ItemDto result = itemService.findBookingByNextAndLast(itemDto);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getLastBooking().getId()).isEqualTo(bookingDto1.getId());
+        assertThat(result.getNextBooking().getId()).isEqualTo(bookingDto2.getId());
+    }
 
 
 }

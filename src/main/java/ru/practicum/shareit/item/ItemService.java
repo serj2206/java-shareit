@@ -5,6 +5,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface ItemService {
     ItemDto create(long userId, ItemDto itemDto);
@@ -18,7 +19,7 @@ public interface ItemService {
 
     ItemDto update(long userId, long itemId, ItemDto itemDto);
 
-    Collection<ItemDto> searchItem(String text, Integer from, Integer size);
+    List<ItemDto> searchItem(String text, Integer from, Integer size);
 
     ItemDto delete(long userId, long itemId);
 
