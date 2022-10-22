@@ -1,6 +1,6 @@
 package ru.practicum.shareit.booking.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,19 +24,13 @@ import ru.practicum.shareit.user.model.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final ValidationService validationService = new ValidationService();
-
-    @Autowired
-    public BookingServiceImpl(BookingRepository bookingRepository, ItemRepository itemRepository, UserRepository userRepository) {
-        this.bookingRepository = bookingRepository;
-        this.itemRepository = itemRepository;
-        this.userRepository = userRepository;
-    }
 
     @Transactional
     @Override
@@ -98,10 +92,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> findAllBookingDtoByBookerId(Long userId, String state, Integer from, Integer size) {
 
-        if (size != null && (from < 0 || size < 0)) {
-            throw new BadRequestException("from или size имеют отрицательное значение");
-        }
-
         userRepository.findById(userId).orElseThrow();
         Page<Booking> bookingList;
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
@@ -143,10 +133,6 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     @Override
     public List<BookingDto> findAllBookingDtoByOwnerId(Long userId, String state, Integer from, Integer size) {
-
-        if (size != null && (from < 0 || size < 0)) {
-            throw new BadRequestException("from или size имеют отрицательное значение");
-        }
 
         userRepository.findById(userId).orElseThrow();
 

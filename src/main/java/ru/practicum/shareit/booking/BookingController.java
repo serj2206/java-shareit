@@ -1,23 +1,23 @@
 package ru.practicum.shareit.booking;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.exception.ValidationException;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/bookings")
 @Slf4j
+@RequiredArgsConstructor
+@Validated
 public class BookingController {
     private final BookingService bookingService;
-
-    @Autowired
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
 
     @PostMapping
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
@@ -47,7 +47,11 @@ public class BookingController {
     @GetMapping
     public Collection<BookingDto> findAllBookingDtoByBooker(@RequestHeader("X-Sharer-User-Id") long userId,
                                                             @RequestParam(defaultValue = "ALL") String state,
+
+                                                            @PositiveOrZero(message = "from не должен быть отрицательным")
                                                             @RequestParam(defaultValue = "1") Integer from,
+
+                                                            @Positive(message = "size должен быть положительным")
                                                             @RequestParam(required = false) Integer size) {
         if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("BookingController GET findAllBookingDtoByBooker() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
@@ -57,7 +61,11 @@ public class BookingController {
     @GetMapping("/owner")
     public Collection<BookingDto> findAllBookingDtoByOwner(@RequestHeader("X-Sharer-User-Id") long userId,
                                                            @RequestParam(defaultValue = "ALL") String state,
+
+                                                           @PositiveOrZero(message = "from не должен быть отрицательным")
                                                            @RequestParam(defaultValue = "1") Integer from,
+
+                                                           @Positive(message = "size должен быть положительным")
                                                            @RequestParam(required = false) Integer size) {
         if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("BookingController GET findAllBookingDtoByOwner() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);

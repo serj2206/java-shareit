@@ -447,30 +447,71 @@ public class ItemControllerTest {
     @Test
     public void findItemDtoAllUserIdNegativeTest() throws Exception {
         //Accept
+        long userId = -1L;
+        Integer from = 0;
+        Integer size = 1;
         when(itemService.findItemDtoAll(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
         //Act
         mockMvc.perform(get("/items")
-                        .queryParam("from", "0")
-                        .queryParam("size", "1")
-                        .header("X-Sharer-User-Id", -1L))
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .header("X-Sharer-User-Id", userId))
                 //Accept
                 .andExpect(status().isConflict());
     }
+
+    @Test
+    public void findItemDtoAllWhenSizeNegativeTest() throws Exception {
+        //Accept
+        long userId = -1L;
+        Integer from = 0;
+        Integer size = -1;
+        when(itemService.findItemDtoAll(anyLong(), anyInt(), anyInt()))
+                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
+        //Act
+        mockMvc.perform(get("/items")
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .header("X-Sharer-User-Id", userId))
+                //Accept
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void findItemDtoAllWhenFromNegativeTest() throws Exception {
+        //Accept
+        long userId = -1L;
+        Integer from = -1;
+        Integer size = 1;
+        when(itemService.findItemDtoAll(anyLong(), anyInt(), anyInt()))
+                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
+        //Act
+        mockMvc.perform(get("/items")
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .header("X-Sharer-User-Id", userId))
+                //Accept
+                .andExpect(status().isInternalServerError());
+    }
+
 
     //searchItems
 
     @Test
     public void searchItemsTest() throws Exception {
         //Accept
+        long userId = 1L;
+        Integer from = 0;
+        Integer size = 1;
         when(itemService.searchItem(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
         //Act
         mockMvc.perform(get("/items/search")
                         .queryParam("text", "ручка")
-                        .queryParam("from", "0")
-                        .queryParam("size", "1")
-                        .header("X-Sharer-User-Id", 1L))
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .header("X-Sharer-User-Id", userId))
                 //Accept
                 .andExpect(status().isOk());
     }
@@ -478,16 +519,55 @@ public class ItemControllerTest {
     @Test
     public void searchItemsUserIdIsNegativeTest() throws Exception {
         //Accept
+        long userId = -1;
+        Integer from = 0;
+        Integer size = 1;
         when(itemService.searchItem(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
         //Act
         mockMvc.perform(get("/items/search")
                         .queryParam("text", "ручка")
-                        .queryParam("from", "0")
-                        .queryParam("size", "1")
-                        .header("X-Sharer-User-Id", -1L))
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .header("X-Sharer-User-Id", userId))
                 //Accept
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void searchItemsWhenSizeIsNegativeTest() throws Exception {
+        //Accept
+        long userId = -1;
+        Integer from = 0;
+        Integer size = -1;
+        when(itemService.searchItem(anyString(), anyInt(), anyInt()))
+                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
+        //Act
+        mockMvc.perform(get("/items/search")
+                        .queryParam("text", "ручка")
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .header("X-Sharer-User-Id", userId))
+                //Accept
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void searchItemsWhenFromIsNegativeTest() throws Exception {
+        //Accept
+        long userId = -1;
+        Integer from = -1;
+        Integer size = 1;
+        when(itemService.searchItem(anyString(), anyInt(), anyInt()))
+                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
+        //Act
+        mockMvc.perform(get("/items/search")
+                        .queryParam("text", "ручка")
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .header("X-Sharer-User-Id", userId))
+                //Accept
+                .andExpect(status().isInternalServerError());
     }
 
     //delete

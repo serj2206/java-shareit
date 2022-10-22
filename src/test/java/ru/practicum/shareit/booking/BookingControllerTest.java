@@ -158,8 +158,8 @@ public class BookingControllerTest {
         //Act
         mockMvc.perform(get("/bookings")
                         .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", "0")
-                        .queryParam("size", "1")
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
                         .queryParam("state", "ALL"))
                 //Assert
                 .andExpect(status().isOk());
@@ -179,11 +179,53 @@ public class BookingControllerTest {
         //Act
         mockMvc.perform(get("/bookings")
                         .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", "0")
-                        .queryParam("size", "1")
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
                         .queryParam("state", "ALL"))
                 //Assert
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void findAllBookingDtoByBookerWhenSizeIsNegativeTest() throws Exception {
+        //Accept
+        Long userId = 1L;
+        Integer from = 0;
+        Integer size = -1;
+        String state = "ALL";
+
+        when(bookingService.findAllBookingDtoByBookerId(userId, state, from, size))
+                .thenReturn(List.of(new BookingDto()));
+
+        //Act
+        mockMvc.perform(get("/bookings")
+                        .header("X-Sharer-User-Id", userId)
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .queryParam("state", "ALL"))
+                //Assert
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void findAllBookingDtoByBookerWhenFromIsNegativeTest() throws Exception {
+        //Accept
+        Long userId = 1L;
+        Integer from = -1;
+        Integer size = 1;
+        String state = "ALL";
+
+        when(bookingService.findAllBookingDtoByBookerId(userId, state, from, size))
+                .thenReturn(List.of(new BookingDto()));
+
+        //Act
+        mockMvc.perform(get("/bookings")
+                        .header("X-Sharer-User-Id", userId)
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .queryParam("state", "ALL"))
+                //Assert
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -226,5 +268,47 @@ public class BookingControllerTest {
                         .queryParam("state", state))
                 //Assert
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void findAllBookingDtoByOwnerWhenSizeIsNegativeTest() throws Exception {
+        //Accept
+        Long userId = 1L;
+        Integer from = 0;
+        Integer size = -1;
+        String state = "ALL";
+
+        when(bookingService.findAllBookingDtoByOwnerId(userId, state, from, size))
+                .thenReturn(List.of(new BookingDto()));
+
+        //Act
+        mockMvc.perform(get("/bookings/owner")
+                        .header("X-Sharer-User-Id", userId)
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .queryParam("state", state))
+                //Assert
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void findAllBookingDtoByOwnerWhenFromIsNegativeTest() throws Exception {
+        //Accept
+        Long userId = 1L;
+        Integer from = -1;
+        Integer size = 1;
+        String state = "ALL";
+
+        when(bookingService.findAllBookingDtoByOwnerId(userId, state, from, size))
+                .thenReturn(List.of(new BookingDto()));
+
+        //Act
+        mockMvc.perform(get("/bookings/owner")
+                        .header("X-Sharer-User-Id", userId)
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString())
+                        .queryParam("state", state))
+                //Assert
+                .andExpect(status().isInternalServerError());
     }
 }

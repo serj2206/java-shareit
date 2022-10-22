@@ -112,8 +112,8 @@ public class ItemRequestControllerTest {
         //Act
         mockMvc.perform(get("/requests/all")
                 .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", "0")
-                        .queryParam("size", "1"))
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString()))
                 //Assert
                 .andExpect(status().isOk());
     }
@@ -130,10 +130,46 @@ public class ItemRequestControllerTest {
         //Act
         mockMvc.perform(get("/requests/all")
                         .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", "0")
-                        .queryParam("size", "1"))
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString()))
                 //Assert
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void findItemRequestByRequestorIdWhenSizeIsNegetiveTest() throws Exception {
+        //Accept
+        Long userId = 1L;
+        Integer from = 0;
+        Integer size = -1;
+
+        when(itemRequestService.findItemRequestByRequestorId(userId, from, size))
+                .thenReturn(List.of(new ItemRequestDto()));
+        //Act
+        mockMvc.perform(get("/requests/all")
+                        .header("X-Sharer-User-Id", userId)
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString()))
+                //Assert
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void findItemRequestByRequestorIdWhenFromIsNegetiveTest() throws Exception {
+        //Accept
+        Long userId = 1L;
+        Integer from = -1;
+        Integer size = 1;
+
+        when(itemRequestService.findItemRequestByRequestorId(userId, from, size))
+                .thenReturn(List.of(new ItemRequestDto()));
+        //Act
+        mockMvc.perform(get("/requests/all")
+                        .header("X-Sharer-User-Id", userId)
+                        .queryParam("from", from.toString())
+                        .queryParam("size", size.toString()))
+                //Assert
+                .andExpect(status().isInternalServerError());
     }
 
     @Test

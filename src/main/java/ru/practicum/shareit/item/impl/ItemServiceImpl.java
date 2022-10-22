@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
@@ -37,18 +38,6 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final ItemRequestRepository itemRequestRepository;
-
-    @Autowired
-    public ItemServiceImpl(ItemRepository itemRepository,
-                           UserRepository userRepository,
-                           BookingRepository bookingRepository,
-                           CommentRepository commentRepository, ItemRequestRepository itemRequestRepository) {
-        this.itemRepository = itemRepository;
-        this.userRepository = userRepository;
-        this.bookingRepository = bookingRepository;
-        this.commentRepository = commentRepository;
-        this.itemRequestRepository = itemRequestRepository;
-    }
 
     @Transactional
     @Override
@@ -100,9 +89,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     @Override
     public Collection<ItemDto> findItemDtoAll(long userId, Integer from, Integer size) {
-        if (size != null && (from < 0 || size < 0)) {
-            throw new BadRequestException("from или size имеют отрицательное значение");
-        }
 
         Collection<ItemDto> itemDtoList;
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
@@ -131,7 +117,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional()
     @Override
     public ItemDto update(long userId, long itemId, ItemDto itemDto) {
-
 
         itemDto.setId(itemId);
 
@@ -167,9 +152,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     @Override
     public List<ItemDto> searchItem(String text, Integer from, Integer size) {
-        if (size != null && (from < 0 || size <= 0)) {
-            throw new BadRequestException("from или size имеют отрицательное значение");
-        }
 
         if (text.isEmpty()) return new ArrayList<>();
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");

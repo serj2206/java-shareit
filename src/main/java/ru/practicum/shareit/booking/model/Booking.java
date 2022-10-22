@@ -1,8 +1,6 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -11,12 +9,14 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bookings")
-@Data
+@EqualsAndHashCode
+@ToString
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Booking {
-    public Booking() {
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,12 +30,10 @@ public class Booking {
 
     @ManyToOne
     @CollectionTable(name = "items", joinColumns = @JoinColumn(name = "id"))
-    //@Column(name = "item_id")
     private Item item;
 
     @OneToOne
     @CollectionTable(name = "users", joinColumns = @JoinColumn(name = "id"))
-    //@Column(name = "booker_id")
     private User booker;
 
     @Column(name = "status")

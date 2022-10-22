@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.exception.ValidationException;
@@ -9,20 +9,18 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.marker.Create;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
 @Slf4j
 @RestController
 @RequestMapping("/items")
 @Validated
+@RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
-
-    @Autowired
-    public ItemController(ItemService itemService) {
-        this.itemService = itemService;
-    }
 
     @PostMapping
     public ItemDto create(@RequestHeader("X-Sharer-User-Id") long userId,
@@ -51,7 +49,11 @@ public class ItemController {
 
     @GetMapping
     public Collection<ItemDto> findItemDtoAll(@RequestHeader("X-Sharer-User-Id") long userId,
+
+                                              @PositiveOrZero(message = "from не должен быть отрицательным")
                                               @RequestParam(defaultValue = "0") Integer from,
+
+                                              @Positive(message = "size должен быть положительным")
                                               @RequestParam(required = false) Integer size) {
         log.info("ItemController: GET_request, findItemDtoAll(), userID = {}, from = {}, size = {}", userId, from, size);
         if (userId <= 0) throw new ValidationException("ID должен быть положительным");
@@ -61,7 +63,11 @@ public class ItemController {
     @GetMapping("/search")
     public Collection<ItemDto> searchItems(@RequestHeader("X-Sharer-User-Id") long userId,
                                            @RequestParam String text,
+
+                                           @PositiveOrZero(message = "from не должен быть отрицательным")
                                            @RequestParam(defaultValue = "1") Integer from,
+
+                                           @Positive(message = "size должен быть положительным")
                                            @RequestParam(required = false) Integer size) {
         log.info("ItemController: GET_request, searchItems(), userId = {}, с параметрами text = {}, from = {}, size = {}", userId, text, from, size);
         if (userId <= 0) throw new ValidationException("ID должен быть положительным");

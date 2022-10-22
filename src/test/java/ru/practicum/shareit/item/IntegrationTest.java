@@ -139,33 +139,6 @@ public class IntegrationTest {
         assertThat(resultList.get(0).getId()).isEqualTo(1L);
     }
 
-    @Order(32)
-    @Test
-    public void findItemAllWhenFromIsNegetiveSize1Test() {
-        final BadRequestException exception =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        itemService.findItemDtoAll(1L, -1, 1);
-                    }
-                });
-        assertThat(exception.getMessage()).isEqualTo("from или size имеют отрицательное значение");
-    }
-
-    @Order(32)
-    @Test
-    public void findItemAllWhenFrom1SizeIsNegetiveTest() {
-        final BadRequestException exception =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        itemService.findItemDtoAll(1L, 1, -1);
-                    }
-                });
-        assertThat(exception.getMessage()).isEqualTo("from или size имеют отрицательное значение");
-    }
-
-
     @Order(40)
     @Test
     public void updateTest() {
@@ -252,22 +225,6 @@ public class IntegrationTest {
         List<ItemDto> resultList = itemService.searchItem("descr", 0, null);
         //Assert
         assertThat(resultList.size()).isEqualTo(2);
-    }
-
-    @Order(46)
-    @Test
-    public void searchItemSizeIsNegativeTest() {
-        //Act
-        BadRequestException exception = assertThrows(BadRequestException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                itemService.searchItem("descr", -1, 1);
-            }
-        });
-
-
-        //Assert
-        assertThat(exception.getMessage()).isEqualTo("from или size имеют отрицательное значение");
     }
 
     //UserService
@@ -472,20 +429,6 @@ public class IntegrationTest {
 
     @Order(69)
     @Test
-    public void findAllBookingDtoByBookerIdWhenFromNegativeTest() {
-        BadRequestException badRequestException =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        bookingService.findAllBookingDtoByBookerId(2L, "CURRENT", -1, 2);
-                    }
-                });
-        assertThat(badRequestException.getMessage())
-                .isEqualTo("from или size имеют отрицательное значение");
-    }
-
-    @Order(69)
-    @Test
     public void findAllBookingDtoByBookerIdWhenFromNullTest() {
         List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "FUTURE", 0, null);
         assertThat(result.size()).isEqualTo(2);
@@ -549,20 +492,6 @@ public class IntegrationTest {
 
     @Order(69)
     @Test
-    public void indAllBookingDtoByOwnerIdWhenFromNegativeTest() {
-        BadRequestException badRequestException =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        bookingService.findAllBookingDtoByOwnerId(1L, "CURRENT", -1, 2);
-                    }
-                });
-        assertThat(badRequestException.getMessage())
-                .isEqualTo("from или size имеют отрицательное значение");
-    }
-
-    @Order(69)
-    @Test
     public void findAllBookingDtoByOwnerIdWhenStateBadTest() {
         BadRequestException badRequestException =
                 assertThrows(BadRequestException.class, new Executable() {
@@ -574,9 +503,6 @@ public class IntegrationTest {
         assertThat(badRequestException.getMessage())
                 .isEqualTo("Unknown state: BAD");
     }
-
-
-
 
     //ItemRequest
     @Order(70)
@@ -592,21 +518,7 @@ public class IntegrationTest {
         assertThat(list.size()).isEqualTo(1);
     }
 
-    @Order(71)
-    @Test
-    public void findItemRequestByRequestorIdFromIsNegativeSizeIsNegative() {
 
-        BadRequestException badRequestException =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        itemRequestService.findItemRequestByRequestorId(1L, -1, 5);
-                    }
-                });
-
-        assertThat(badRequestException.getMessage())
-                .isEqualTo("Значения парметров не корректны");
-    }
 
     @Order(72)
     @Test
