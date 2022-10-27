@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="shareit@localhost" uuid="c5373419-564b-49bf-8c83-e4d79299f8f5">
+    <data-source source="LOCAL" name="shareit" uuid="3ef8d942-4a74-45cc-b839-2841fc3c540f">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/shareit</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:6541/shareit</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

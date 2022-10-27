@@ -92,15 +92,7 @@ public class ItemServiceImpl implements ItemService {
 
         Collection<ItemDto> itemDtoList;
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
-        Pageable pageable;
-
-        //Если size == null возвращаем всё
-        if (size == null) {
-            pageable = null;
-        } else {
-            //Иначе постранично
-            pageable = FromSizeRequest.of(from, size, sortById);
-        }
+        Pageable pageable = FromSizeRequest.of(from, size, sortById);
 
         Page<Item> itemPage = itemRepository.findItemByOwnerId(userId, pageable);
         itemDtoList = itemPage.stream()
@@ -155,14 +147,9 @@ public class ItemServiceImpl implements ItemService {
 
         if (text.isEmpty()) return new ArrayList<>();
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
-        Pageable pageable;
-        //Если size == null ищем всё
-        if (size == null) {
-            pageable = null;
-        } else {
-            //иначе постранично
-            pageable = FromSizeRequest.of(from, size, sortById);
-        }
+
+        Pageable pageable = FromSizeRequest.of(from, size, sortById);
+
         Page<Item> itemPage = itemRepository.searchItem(text, pageable);
 
         return itemPage.stream()

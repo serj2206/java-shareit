@@ -62,197 +62,6 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.available", is(itemDto.getAvailable())));
     }
 
-    @Test
-    public void createNameIsNullTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setDescription("descriptionItem1");
-        itemDto.setAvailable(true);
-
-        when(itemService.create(1L, itemDto)).thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    public void createNameIsEmptyTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("");
-        itemDto.setDescription("descriptionItem1");
-        itemDto.setAvailable(true);
-
-        when(itemService.create(1L, itemDto)).thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    public void createNameIsBlankTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName(" ");
-        itemDto.setDescription("descriptionItem1");
-        itemDto.setAvailable(true);
-
-        when(itemService.create(1L, itemDto)).thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    public void createDescriptionIsNullTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("item1");
-        itemDto.setAvailable(true);
-
-        when(itemService.create(1L, itemDto)).thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void createDescriptionIsEmptyTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("item1");
-        itemDto.setDescription("");
-        itemDto.setAvailable(true);
-
-        when(itemService.create(1L, itemDto)).thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void createDescriptionIsBlankTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("item1");
-        itemDto.setDescription(" ");
-        itemDto.setAvailable(true);
-
-        when(itemService.create(1L, itemDto)).thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void createAvailableFalseTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("item1");
-        itemDto.setDescription("descriptionItem1");
-        itemDto.setAvailable(false);
-
-        when(itemService.create(1L, itemDto)).thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void createAvailableNullTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("item1");
-        itemDto.setDescription("descriptionItem1");
-
-        when(itemService.create(1L, itemDto)).thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void createUserIdIsNegativTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("item1");
-        itemDto.setDescription("descriptionItem1");
-        itemDto.setAvailable(true);
-
-        when(itemService.create(1L, itemDto))
-                .thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", -1L))
-
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-
     //update
 
     @Test
@@ -282,50 +91,6 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void updateItemIdIsNegativeTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("item1Update");
-        itemDto.setDescription("descriptionItem1Update");
-        itemDto.setAvailable(false);
-
-        when(itemService.update(1L, 1L, itemDto))
-                .thenReturn(new ItemDto(1L, "item1Update", "descriptionItem1Update", false, null));
-        //Act
-        mockMvc.perform(patch("/items/-1")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void updateUserIdIsNegativeTest() throws Exception {
-        //Accept
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("item1Update");
-        itemDto.setDescription("descriptionItem1Update");
-        itemDto.setAvailable(false);
-
-        when(itemService.update(1L, 1L, itemDto))
-                .thenReturn(new ItemDto(1L, "item1Update", "descriptionItem1Update", false, null));
-        //Act
-        mockMvc.perform(patch("/items/1")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", -1L))
-
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
     public void addCommentTest() throws Exception {
         //Accept
         CommentDto commentDto = new CommentDto();
@@ -347,48 +112,6 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void addCommentUserIdIsNegativeTest() throws Exception {
-        //Accept
-        CommentDto commentDto = new CommentDto();
-        commentDto.setText("Comment1");
-        LocalDateTime localDateTime = LocalDateTime.now();
-
-        when(itemService.addComment(1L, 1L, commentDto))
-                .thenReturn(new CommentDto(1L, "Comment1", "user1", localDateTime));
-        //Act
-        mockMvc.perform(post("/items/1/comment")
-                        .content(mapper.writeValueAsString(commentDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", -1L))
-
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void addCommentItemIdIsNegativeTest() throws Exception {
-        //Accept
-        CommentDto commentDto = new CommentDto();
-        commentDto.setText("Comment1");
-        LocalDateTime localDateTime = LocalDateTime.now();
-
-        when(itemService.addComment(1L, 1L, commentDto))
-                .thenReturn(new CommentDto(1L, "Comment1", "user1", localDateTime));
-        //Act
-        mockMvc.perform(post("/items/-1/comment")
-                        .content(mapper.writeValueAsString(commentDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
     public void findItemDtoByIdTest() throws Exception {
         //Accept
         when(itemService.findItemDtoById(anyLong(), anyLong()))
@@ -400,32 +123,6 @@ public class ItemControllerTest {
 
                 //Assert
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    public void findItemDtoByIdUserIdIsNegativeTest() throws Exception {
-        //Accept
-        when(itemService.findItemDtoById(anyLong(), anyLong()))
-                .thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-
-        //Act
-        mockMvc.perform(get("/items/1")
-                        .header("X-Sharer-User-Id", -1L))
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void findItemDtoByIdItemIdIsNegativeTest() throws Exception {
-        //Accept
-        when(itemService.findItemDtoById(anyLong(), anyLong()))
-                .thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-
-        //Act
-        mockMvc.perform(get("/items/-1")
-                        .header("X-Sharer-User-Id", 1L))
-                //Assert
-                .andExpect(status().isConflict());
     }
 
     //findItemDtoAll
@@ -443,58 +140,6 @@ public class ItemControllerTest {
                 //Accept
                 .andExpect(status().isOk());
     }
-
-    @Test
-    public void findItemDtoAllUserIdNegativeTest() throws Exception {
-        //Accept
-        long userId = -1L;
-        Integer from = 0;
-        Integer size = 1;
-        when(itemService.findItemDtoAll(anyLong(), anyInt(), anyInt()))
-                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
-        //Act
-        mockMvc.perform(get("/items")
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .header("X-Sharer-User-Id", userId))
-                //Accept
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void findItemDtoAllWhenSizeNegativeTest() throws Exception {
-        //Accept
-        long userId = -1L;
-        Integer from = 0;
-        Integer size = -1;
-        when(itemService.findItemDtoAll(anyLong(), anyInt(), anyInt()))
-                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
-        //Act
-        mockMvc.perform(get("/items")
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .header("X-Sharer-User-Id", userId))
-                //Accept
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void findItemDtoAllWhenFromNegativeTest() throws Exception {
-        //Accept
-        long userId = -1L;
-        Integer from = -1;
-        Integer size = 1;
-        when(itemService.findItemDtoAll(anyLong(), anyInt(), anyInt()))
-                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
-        //Act
-        mockMvc.perform(get("/items")
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .header("X-Sharer-User-Id", userId))
-                //Accept
-                .andExpect(status().isInternalServerError());
-    }
-
 
     //searchItems
 
@@ -516,59 +161,6 @@ public class ItemControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void searchItemsUserIdIsNegativeTest() throws Exception {
-        //Accept
-        long userId = -1;
-        Integer from = 0;
-        Integer size = 1;
-        when(itemService.searchItem(anyString(), anyInt(), anyInt()))
-                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
-        //Act
-        mockMvc.perform(get("/items/search")
-                        .queryParam("text", "ручка")
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .header("X-Sharer-User-Id", userId))
-                //Accept
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void searchItemsWhenSizeIsNegativeTest() throws Exception {
-        //Accept
-        long userId = -1;
-        Integer from = 0;
-        Integer size = -1;
-        when(itemService.searchItem(anyString(), anyInt(), anyInt()))
-                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
-        //Act
-        mockMvc.perform(get("/items/search")
-                        .queryParam("text", "ручка")
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .header("X-Sharer-User-Id", userId))
-                //Accept
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void searchItemsWhenFromIsNegativeTest() throws Exception {
-        //Accept
-        long userId = -1;
-        Integer from = -1;
-        Integer size = 1;
-        when(itemService.searchItem(anyString(), anyInt(), anyInt()))
-                .thenReturn(List.of(new ItemDto(1L, "item1", "descriptionItem1", true, null)));
-        //Act
-        mockMvc.perform(get("/items/search")
-                        .queryParam("text", "ручка")
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .header("X-Sharer-User-Id", userId))
-                //Accept
-                .andExpect(status().isInternalServerError());
-    }
 
     //delete
 
@@ -582,30 +174,6 @@ public class ItemControllerTest {
                 .header("X-Sharer-User-Id", 1L))
                 //Accept
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    public void deleteUserIdIsNegativeTest() throws Exception {
-        //Accept
-        when(itemService.delete(anyLong(), anyLong()))
-                .thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(delete("/items/1")
-                        .header("X-Sharer-User-Id", -1L))
-                //Accept
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void deleteItemIdIsNegativeTest() throws Exception {
-        //Accept
-        when(itemService.delete(anyLong(), anyLong()))
-                .thenReturn(new ItemDto(1L, "item1", "descriptionItem1", true, null));
-        //Act
-        mockMvc.perform(delete("/items/-1")
-                        .header("X-Sharer-User-Id", 1L))
-                //Accept
-                .andExpect(status().isConflict());
     }
 
 }

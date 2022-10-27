@@ -54,28 +54,6 @@ public class ItemRequestControllerTest {
     }
 
     @Test
-    public void addItemRequestUserIdNegativeTest() throws Exception {
-        //Accept
-        ItemRequestDto itemRequestDto = new ItemRequestDto();
-        itemRequestDto.setDescription("description1");
-        LocalDateTime created = LocalDateTime.now();
-        Long userId = -1L;
-
-        when(itemRequestService.addItemRequest(itemRequestDto, userId))
-                .thenReturn(new ItemRequestDto(1L, "description1", 1L, created));
-
-        //Act
-        mockMvc.perform(post("/requests")
-                        .content(mapper.writeValueAsString(itemRequestDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", userId))
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
     public void findItemRequestTest() throws Exception {
         //Accept
         Long userId = 1L;
@@ -86,19 +64,6 @@ public class ItemRequestControllerTest {
                 //Assert
                 .andExpect(status().isOk());
     }
-
-    @Test
-    public void findItemRequestUserIdIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = -1L;
-        when(itemRequestService.findItemRequest(userId)).thenReturn(List.of(new ItemRequestDto()));
-        //Act
-        mockMvc.perform(get("/requests")
-                        .header("X-Sharer-User-Id", userId))
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
 
     @Test
     public void findItemRequestByRequestorIdTest() throws Exception {
@@ -119,60 +84,6 @@ public class ItemRequestControllerTest {
     }
 
     @Test
-    public void findItemRequestByRequestorIdWhenUserIdIsNegetiveTest() throws Exception {
-        //Accept
-        Long userId = -1L;
-        Integer from = 0;
-        Integer size = 1;
-
-        when(itemRequestService.findItemRequestByRequestorId(userId, from, size))
-                .thenReturn(List.of(new ItemRequestDto()));
-        //Act
-        mockMvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString()))
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void findItemRequestByRequestorIdWhenSizeIsNegetiveTest() throws Exception {
-        //Accept
-        Long userId = 1L;
-        Integer from = 0;
-        Integer size = -1;
-
-        when(itemRequestService.findItemRequestByRequestorId(userId, from, size))
-                .thenReturn(List.of(new ItemRequestDto()));
-        //Act
-        mockMvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString()))
-                //Assert
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void findItemRequestByRequestorIdWhenFromIsNegetiveTest() throws Exception {
-        //Accept
-        Long userId = 1L;
-        Integer from = -1;
-        Integer size = 1;
-
-        when(itemRequestService.findItemRequestByRequestorId(userId, from, size))
-                .thenReturn(List.of(new ItemRequestDto()));
-        //Act
-        mockMvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString()))
-                //Assert
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
     public void findItemRequestByIdTest() throws Exception {
         //Accept
         Long userId = 1L;
@@ -186,22 +97,6 @@ public class ItemRequestControllerTest {
                         .header("X-Sharer-User-Id", userId))
                 //Assert
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    public void findItemRequestByIdWhenUserIdIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = -1L;
-        Long requestId = 1L;
-
-
-        when(itemRequestService.findItemById(userId, requestId))
-                .thenReturn(new ItemRequestDto());
-        //Act
-        mockMvc.perform(get("/requests/1")
-                        .header("X-Sharer-User-Id", userId))
-                //Assert
-                .andExpect(status().isConflict());
     }
 
 }

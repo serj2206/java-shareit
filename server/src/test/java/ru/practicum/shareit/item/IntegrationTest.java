@@ -125,7 +125,7 @@ public class IntegrationTest {
         itemDto.setAvailable(true);
 
         itemService.create(1L, itemDto);
-        Collection<ItemDto> resultList = itemService.findItemDtoAll(1L, 0, null);
+        Collection<ItemDto> resultList = itemService.findItemDtoAll(1L, 0, 10);
 
         assertThat(resultList.size()).isEqualTo(2);
     }
@@ -218,14 +218,7 @@ public class IntegrationTest {
         assertThat(resultList.size()).isEqualTo(1);
     }
 
-    @Order(45)
-    @Test
-    public void searchItemSizeIsNullTest() {
-        //Act
-        List<ItemDto> resultList = itemService.searchItem("descr", 0, null);
-        //Assert
-        assertThat(resultList.size()).isEqualTo(2);
-    }
+
 
     //UserService
     @Order(50)
@@ -513,7 +506,7 @@ public class IntegrationTest {
 
         ItemRequestDto itemRequestDto1 = itemRequestService.addItemRequest(itemRequestDto, 2L);
 
-        List<ItemRequestDto> list = itemRequestService.findItemRequestByRequestorId(1L, 0, null);
+        List<ItemRequestDto> list = itemRequestService.findItemRequestByRequestorId(1L, 0, 10);
 
         assertThat(list.size()).isEqualTo(1);
     }

@@ -53,26 +53,6 @@ public class BookingControllerTest {
 
 
     @Test
-    public void createBookingWhenUserIdIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = -1L;
-        BookingDto bookingDto = new BookingDto();
-        bookingDto.setStart(LocalDateTime.now().toString());
-        bookingDto.setEnd(LocalDateTime.now().plusDays(5L).toString());
-
-        when(bookingService.create(userId, bookingDto)).thenReturn(new BookingDto());
-        //Act
-        mockMvc.perform(post("/bookings")
-                        .content(mapper.writeValueAsString(bookingDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", userId))
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
     public void approvedTest() throws Exception {
         //Accept
         Long userId = 1L;
@@ -93,26 +73,6 @@ public class BookingControllerTest {
     }
 
     @Test
-    public void approvedWhenUserIdIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = -1L;
-        Long bookingId = 1L;
-        Boolean approved = true;
-        BookingDto bookingDto = new BookingDto();
-        bookingDto.setStart(LocalDateTime.now().toString());
-        bookingDto.setEnd(LocalDateTime.now().plusDays(5L).toString());
-
-        when(bookingService.approved(userId, bookingId, approved)).thenReturn(new BookingDto());
-        //Act
-        mockMvc.perform(patch("/bookings/" + bookingId)
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("approved", "true"))
-
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
     public void findBookingByIdTest() throws Exception {
         //Accept
         Long userId = 1L;
@@ -125,22 +85,6 @@ public class BookingControllerTest {
 
                 //Assert
                 .andExpect(status().isOk());
-
-    }
-
-    @Test
-    public void findBookingByIdWhenUserIdIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = -1L;
-        Long bookingId = 1L;
-
-        when(bookingService.findBookingDtoById(bookingId, userId)).thenReturn(new BookingDto());
-        //Act
-        mockMvc.perform(get("/bookings/" + bookingId)
-                        .header("X-Sharer-User-Id", userId))
-
-                //Assert
-                .andExpect(status().isConflict());
 
     }
 
@@ -166,69 +110,6 @@ public class BookingControllerTest {
     }
 
     @Test
-    public void findAllBookingDtoByBookerWhenUserIdIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = -1L;
-        Integer from = 0;
-        Integer size = 1;
-        String state = "ALL";
-
-        when(bookingService.findAllBookingDtoByBookerId(userId, state, from, size))
-                .thenReturn(List.of(new BookingDto()));
-
-        //Act
-        mockMvc.perform(get("/bookings")
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .queryParam("state", "ALL"))
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void findAllBookingDtoByBookerWhenSizeIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = 1L;
-        Integer from = 0;
-        Integer size = -1;
-        String state = "ALL";
-
-        when(bookingService.findAllBookingDtoByBookerId(userId, state, from, size))
-                .thenReturn(List.of(new BookingDto()));
-
-        //Act
-        mockMvc.perform(get("/bookings")
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .queryParam("state", "ALL"))
-                //Assert
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void findAllBookingDtoByBookerWhenFromIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = 1L;
-        Integer from = -1;
-        Integer size = 1;
-        String state = "ALL";
-
-        when(bookingService.findAllBookingDtoByBookerId(userId, state, from, size))
-                .thenReturn(List.of(new BookingDto()));
-
-        //Act
-        mockMvc.perform(get("/bookings")
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .queryParam("state", "ALL"))
-                //Assert
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
     public void findAllBookingDtoByOwnerTest() throws Exception {
         //Accept
         Long userId = 1L;
@@ -248,67 +129,6 @@ public class BookingControllerTest {
                 //Assert
                 .andExpect(status().isOk());
     }
-
-    @Test
-    public void findAllBookingDtoByOwnerWhenUserIdIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = -1L;
-        Integer from = 0;
-        Integer size = 1;
-        String state = "ALL";
-
-        when(bookingService.findAllBookingDtoByOwnerId(userId, state, from, size))
-                .thenReturn(List.of(new BookingDto()));
-
-        //Act
-        mockMvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .queryParam("state", state))
-                //Assert
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void findAllBookingDtoByOwnerWhenSizeIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = 1L;
-        Integer from = 0;
-        Integer size = -1;
-        String state = "ALL";
-
-        when(bookingService.findAllBookingDtoByOwnerId(userId, state, from, size))
-                .thenReturn(List.of(new BookingDto()));
-
-        //Act
-        mockMvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .queryParam("state", state))
-                //Assert
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void findAllBookingDtoByOwnerWhenFromIsNegativeTest() throws Exception {
-        //Accept
-        Long userId = 1L;
-        Integer from = -1;
-        Integer size = 1;
-        String state = "ALL";
-
-        when(bookingService.findAllBookingDtoByOwnerId(userId, state, from, size))
-                .thenReturn(List.of(new BookingDto()));
-
-        //Act
-        mockMvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", userId)
-                        .queryParam("from", from.toString())
-                        .queryParam("size", size.toString())
-                        .queryParam("state", state))
-                //Assert
-                .andExpect(status().isInternalServerError());
-    }
 }
+
+
