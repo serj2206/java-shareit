@@ -13,7 +13,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query(value = "SELECT it.* " +
             "FROM items AS it " +
-            "WHERE (it.name ilike concat ('%', ?1, '%') OR it.description ILIKE concat ('%', ?1, '%')) " +
+            "WHERE (it.name ilike concat ('%', ?1, '%') OR it.description ilike concat ('%', ?1, '%')) " +
             "AND it.available = true " +
             "ORDER BY it.id", nativeQuery = true)
     Page<Item> searchItem(String text, Pageable pageable);

@@ -4,10 +4,7 @@ package ru.practicum.shareit.request.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.marker.Create;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 public class ItemRequestDto {
     private long id;
-    @NotNull(groups = {Create.class})
-    @NotBlank(groups = {Create.class})
     private String description;
     private long requestorId;
     private LocalDateTime created;
-
     private List<Item> items = new ArrayList<>();
 
     public ItemRequestDto(long id, String description, long requestorId, LocalDateTime created) {
@@ -36,7 +30,6 @@ public class ItemRequestDto {
         items.add(item);
     }
 
-
     @Data
     @AllArgsConstructor
     private class Item {
@@ -46,5 +39,4 @@ public class ItemRequestDto {
         private Boolean available;
         private Long requestId;
     }
-
 }

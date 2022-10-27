@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class BookingDto {
-
     private Long id;
     private LocalDateTime start;
     private LocalDateTime end;
@@ -53,7 +52,6 @@ public class BookingDto {
 
     @Data
     public class Item {
-
         private Long id;
         private String name;
     }

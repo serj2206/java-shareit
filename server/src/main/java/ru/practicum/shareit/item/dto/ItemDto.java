@@ -4,11 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.marker.Create;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,19 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 public class ItemDto {
     private Long id;
-
-    @NotNull(groups = {Create.class})
-    @NotBlank(groups = {Create.class})
     private String name;
-
-    @NotNull(groups = {Create.class})
-    @NotBlank(groups = {Create.class})
     private String description;
-
-    @AssertTrue(groups = {Create.class})
-    @NotNull(groups = {Create.class})
     private Boolean available;
-
     private Booking lastBooking;
     private Booking nextBooking;
 

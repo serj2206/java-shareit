@@ -75,14 +75,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestDto> findItemRequestByRequestorId(long userId, Integer from, Integer size) {
 
         userRepository.findById(userId).orElseThrow(() -> new BadRequestException("Нет прав"));
-        Pageable pageable;
+
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        //Если размер страницы не указан выгрузить все
-        if (size == null) {
-            pageable = null;
-        } else {
-            pageable = FromSizeRequest.of(from, size, sort);
-        }
+        Pageable pageable = FromSizeRequest.of(from, size, sort);
 
         Page<ItemRequest> itemRequestList = itemRequestRepository.findByRequestorIdNot(userId, pageable);
 

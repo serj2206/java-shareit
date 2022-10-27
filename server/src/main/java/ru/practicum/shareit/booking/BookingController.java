@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.exception.ValidationException;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
 @RestController
@@ -22,7 +19,6 @@ public class BookingController {
     @PostMapping
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                     @RequestBody BookingDto bookingDto) {
-        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("BookingController POST createBooking() userId = {}, bookingDto = {}", userId, bookingDto);
         return bookingService.create(userId, bookingDto);
     }
@@ -31,7 +27,6 @@ public class BookingController {
     public BookingDto approved(@RequestHeader("X-Sharer-User-Id") long userId,
                                @PathVariable long bookingId,
                                @RequestParam boolean approved) {
-        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("BookingController PATCH createBooking() userId = {}, bookingId = {}, approved = {}", userId, bookingId, approved);
         return bookingService.approved(userId, bookingId, approved);
     }
@@ -39,7 +34,6 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     public BookingDto findBookingById(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @PathVariable long bookingId) {
-        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("BookingController GET findBookingById() userId = {}, bookingId = {}", userId, bookingId);
         return bookingService.findBookingDtoById(bookingId, userId);
     }
@@ -47,13 +41,8 @@ public class BookingController {
     @GetMapping
     public Collection<BookingDto> findAllBookingDtoByBooker(@RequestHeader("X-Sharer-User-Id") long userId,
                                                             @RequestParam(defaultValue = "ALL") String state,
-
-                                                            @PositiveOrZero(message = "from не должен быть отрицательным")
                                                             @RequestParam(defaultValue = "1") Integer from,
-
-                                                            @Positive(message = "size должен быть положительным")
-                                                            @RequestParam(required = false) Integer size) {
-        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
+                                                            @RequestParam(defaultValue = "10") Integer size) {
         log.info("BookingController GET findAllBookingDtoByBooker() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
         return bookingService.findAllBookingDtoByBookerId(userId, state, from, size);
     }
@@ -61,13 +50,8 @@ public class BookingController {
     @GetMapping("/owner")
     public Collection<BookingDto> findAllBookingDtoByOwner(@RequestHeader("X-Sharer-User-Id") long userId,
                                                            @RequestParam(defaultValue = "ALL") String state,
-
-                                                           @PositiveOrZero(message = "from не должен быть отрицательным")
                                                            @RequestParam(defaultValue = "1") Integer from,
-
-                                                           @Positive(message = "size должен быть положительным")
-                                                           @RequestParam(required = false) Integer size) {
-        if (userId <= 0) throw new ValidationException("ID должен быть положительным");
+                                                           @RequestParam(defaultValue = "10") Integer size) {
         log.info("BookingController GET findAllBookingDtoByOwner() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
         return bookingService.findAllBookingDtoByOwnerId(userId, state, from, size);
     }
