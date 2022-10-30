@@ -27,13 +27,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleRuntimeException(final RuntimeException e) {
-        log.warn("500 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage(), "Ошибка сервера");
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNoSuchElementException(final NoSuchElementException e) {
         log.warn("404 {}", e.getMessage(), e);
@@ -46,4 +39,7 @@ public class ErrorHandler {
         log.warn("400 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage(), "Неверный запрос");
     }
+
+
+
 }

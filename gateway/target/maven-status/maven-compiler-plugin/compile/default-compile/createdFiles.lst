@@ -19,6 +19,7 @@ ru\practicum\shareit\booking\dto\BookingDto.class
 ru\practicum\shareit\item\ItemController.class
 ru\practicum\shareit\booking\dto\Status.class
 ru\practicum\shareit\request\ItemRequestController.class
+ru\practicum\shareit\booking\ValidationService.class
 ru\practicum\shareit\booking\dto\BookingDto$Item.class
 ru\practicum\shareit\user\UserClient.class
 ru\practicum\shareit\ShareItGateway.class

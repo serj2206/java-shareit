@@ -262,64 +262,8 @@ public class IntegrationTest {
 
     }
 
-    @Order(61)
-    @Test
-    public void createdBookingStartBeforeNowTest() {
-        BookingDto bookingDto = new BookingDto();
-        bookingDto.setStart(LocalDateTime.now().minusDays(1).toString());
-        bookingDto.setEnd(LocalDateTime.now().plusDays(5).toString());
-        bookingDto.setItemId(1L);
 
-        BadRequestException badRequestException =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        bookingService.create(2L, bookingDto);
-                    }
-                });
 
-        assertThat(badRequestException.getMessage()).isEqualTo("Время бронирования указано неверно: дата начала бронирования указана раньше текущей даты");
-
-    }
-
-    @Order(62)
-    @Test
-    public void createdBookingStartNullEndNull() {
-        BookingDto bookingDto = new BookingDto();
-
-        bookingDto.setItemId(1L);
-
-        BadRequestException badRequestException =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        bookingService.create(2L, bookingDto);
-                    }
-                });
-
-        assertThat(badRequestException.getMessage()).isEqualTo("Время бронирования указано неверно");
-
-    }
-
-    @Order(63)
-    @Test
-    public void createdBookingStartAfterEndTest() {
-        BookingDto bookingDto = new BookingDto();
-        bookingDto.setStart(LocalDateTime.now().plusDays(5).toString());
-        bookingDto.setEnd(LocalDateTime.now().plusDays(1).toString());
-        bookingDto.setItemId(1L);
-
-        BadRequestException badRequestException =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        bookingService.create(2L, bookingDto);
-                    }
-                });
-
-        assertThat(badRequestException.getMessage())
-                .isEqualTo("Время бронирования указано неверно: дата окончания указано раньше, чем дата начала");
-    }
 
     @Order(64)
     @Test
@@ -423,79 +367,55 @@ public class IntegrationTest {
     @Order(69)
     @Test
     public void findAllBookingDtoByBookerIdWhenFromNullTest() {
-        List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "FUTURE", 0, null);
+        List<BookingDto> result = bookingService.findAllBookingDtoByBookerId(2L, "FUTURE", 0, 10);
         assertThat(result.size()).isEqualTo(2);
     }
 
-    @Order(69)
-    @Test
-    public void findAllBookingDtoByBookerIdWhenStateBadTest() {
-        BadRequestException badRequestException =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        bookingService.findAllBookingDtoByBookerId(2L, "BAD", 0, 2);
-                    }
-                });
-        assertThat(badRequestException.getMessage())
-                .isEqualTo("Unknown state: BAD");
-    }
+
 
     @Order(69)
     @Test
     public void findAllBookingDtoByOwnerIdALLTest() {
-        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "ALL", 0, null);
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "ALL", 0, 10);
         assertThat(result.size()).isEqualTo(2);
     }
 
     @Order(69)
     @Test
     public void findAllBookingDtoByOwnerIdWaitingTest() {
-        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "WAITING", 0, null);
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "WAITING", 0, 10);
         assertThat(result.size()).isEqualTo(1);
     }
 
     @Order(69)
     @Test
     public void findAllBookingDtoByOwnerIdRejectedTest() {
-        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "REJECTED", 0, null);
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "REJECTED", 0, 10);
         assertThat(result.size()).isEqualTo(1);
     }
 
     @Order(69)
     @Test
     public void findAllBookingDtoByOwnerIdCurrentTest() {
-        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "CURRENT", 0, null);
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "CURRENT", 0, 10);
         assertThat(result.size()).isEqualTo(0);
     }
 
     @Order(69)
     @Test
     public void findAllBookingDtoByOwnerIdPastTest() {
-        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "PAST", 0, null);
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "PAST", 0, 10);
         assertThat(result.size()).isEqualTo(0);
     }
 
     @Order(69)
     @Test
     public void findAllBookingDtoByOwnerIdFutureTest() {
-        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "FUTURE", 0, null);
+        List<BookingDto> result = bookingService.findAllBookingDtoByOwnerId(1L, "FUTURE", 0, 10);
         assertThat(result.size()).isEqualTo(2);
     }
 
-    @Order(69)
-    @Test
-    public void findAllBookingDtoByOwnerIdWhenStateBadTest() {
-        BadRequestException badRequestException =
-                assertThrows(BadRequestException.class, new Executable() {
-                    @Override
-                    public void execute() {
-                        bookingService.findAllBookingDtoByOwnerId(1L, "BAD", 0, 2);
-                    }
-                });
-        assertThat(badRequestException.getMessage())
-                .isEqualTo("Unknown state: BAD");
-    }
+
 
     //ItemRequest
     @Order(70)

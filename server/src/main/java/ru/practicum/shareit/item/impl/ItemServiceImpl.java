@@ -170,7 +170,7 @@ public class ItemServiceImpl implements ItemService {
     public CommentDto addComment(long userId, long itemId, CommentDto commentDto) {
         Long countBooking = bookingRepository.findByItem_IdAndBooker_IdAndStatus(itemId, userId, "APPROVED");
         if (countBooking == null || countBooking == 0L) {
-            throw new BadRequestException("Нет прав для комментирования этой вещи");
+            throw new BadRequestException("Нет прав для комментирования этой вещи"); //
         }
 
         Item item = itemRepository.findById(itemId)

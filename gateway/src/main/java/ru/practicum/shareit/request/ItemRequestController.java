@@ -25,14 +25,14 @@ public class ItemRequestController {
     @PostMapping
     public ResponseEntity<Object> addItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
                                                  @Validated({Create.class})
-                                         @RequestBody ItemRequestDto itemRequestDto) {
+                                                 @RequestBody ItemRequestDto itemRequestDto) {
         if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         return itemRequestClient.addItemRequest(itemRequestDto, userId);
     }
 
     //Выгрузка свои запросов
     @GetMapping
-    public  ResponseEntity<Object> findItemRequest(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public ResponseEntity<Object> findItemRequest(@RequestHeader("X-Sharer-User-Id") long userId) {
         if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         return itemRequestClient.findItemRequest(userId);
     }
@@ -41,13 +41,13 @@ public class ItemRequestController {
     //from - индекс первого элемента
     //size - количество элементов для отображения
     @GetMapping("/all")
-    public  ResponseEntity<Object> findItemRequestByRequestorId(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<Object> findItemRequestByRequestorId(@RequestHeader("X-Sharer-User-Id") long userId,
 
-                                                             @PositiveOrZero(message = "from не должен быть отрицательным")
-                                                             @RequestParam(defaultValue = "0") Integer from,
+                                                               @PositiveOrZero(message = "from не должен быть отрицательным")
+                                                               @RequestParam(defaultValue = "0") Integer from,
 
-                                                             @Positive(message = "size должен быть положительным")
-                                                             @RequestParam(defaultValue = "10") Integer size) {
+                                                               @Positive(message = "size должен быть положительным")
+                                                               @RequestParam(defaultValue = "10") Integer size) {
         if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         log.info("ItemRequestController: GET_request findItemRequestByRequestorId() userID = {}, from = {}, size = {}", userId, from, size);
         return itemRequestClient.findItemRequestByRequestorId(userId, from, size);
@@ -55,8 +55,8 @@ public class ItemRequestController {
 
     //Выгрузка конкретного запроса
     @GetMapping("/{requestId}")
-    public  ResponseEntity<Object> findItemRequestById(@RequestHeader("X-Sharer-User-Id") long userId,
-                                              @PathVariable long requestId) {
+    public ResponseEntity<Object> findItemRequestById(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                      @PathVariable long requestId) {
         if (userId <= 0) throw new ValidationException("ID должен быть положительным");
         return itemRequestClient.findItemRequestById(userId, requestId);
     }
