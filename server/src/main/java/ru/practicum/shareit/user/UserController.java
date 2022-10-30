@@ -23,26 +23,26 @@ public class UserController {
 
     @GetMapping
     public Collection<UserDto> findAll() {
-        log.info("UserController: GET_request findAll()");
+        log.info(" UserController: GET_request findAll()");
         return userService.findAll();
     }
 
     @GetMapping("/{userId}")
     public UserDto findUserById(@PathVariable long userId) {
-        log.info("UserController: GET_request, findUserById(), userId = {}", userId);
+        log.info(" UserController: GET_request, findUserById(), userId = {}", userId);
         return userService.findUserById(userId);
     }
 
     @PatchMapping("/{userId}")
     public UserDto update(@PathVariable long userId,
                           @RequestBody UserDto userDto) {
-        log.info("UserController: PATCH_request, update() usrId = {}, userDto = {}", userId, userDto);
+        log.info(" UserController: PATCH_request, update() usrId = {}, userDto = {}", userId, userDto);
         return userService.update(userDto, userId);
     }
 
     @DeleteMapping("/{userId}")
     public UserDto delete(@PathVariable long userId) {
-        log.info("UserController: DELETE_request с userId = {}", userId);
+        log.info(" UserController: DELETE_request с userId = {}", userId);
         return userService.delete(userId);
     }
 }

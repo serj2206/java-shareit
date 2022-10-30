@@ -6,38 +6,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleWrongParameterException(final WrongParameterException e) {
-        log.warn("404 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage(), "Неверное значение");
-    }
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleValidationException(final ValidationException e) {
         log.warn("409 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage(), "Неверный запрос");
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleRuntimeException(final RuntimeException e) {
-        log.warn("500 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage(), "Ошибка сервера");
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNoSuchElementException(final NoSuchElementException e) {
-        log.warn("404 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage(), "Значение не найдено");
     }
 
     @ExceptionHandler

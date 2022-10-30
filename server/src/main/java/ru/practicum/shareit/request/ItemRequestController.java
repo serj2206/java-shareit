@@ -20,14 +20,14 @@ public class ItemRequestController {
     @PostMapping
     public ItemRequestDto addItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
                                          @RequestBody ItemRequestDto itemRequestDto) {
-        log.info("ItemRequestController: POST_request addItemRequest() userID = {}", userId);
+        log.info(" ItemRequestController: POST_request addItemRequest() userID = {}", userId);
         return itemRequestService.addItemRequest(itemRequestDto, userId);
     }
 
     //Выгрузка свои запросов
     @GetMapping
     public List<ItemRequestDto> findItemRequest(@RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("ItemRequestController: GET_request findItemRequest() userID = {}", userId);
+        log.info(" ItemRequestController: GET_request findItemRequest() userID = {}", userId);
         return itemRequestService.findItemRequest(userId);
     }
 
@@ -38,7 +38,7 @@ public class ItemRequestController {
     public List<ItemRequestDto> findItemRequestByRequestorId(@RequestHeader("X-Sharer-User-Id") long userId,
                                                              @RequestParam(defaultValue = "0") Integer from,
                                                              @RequestParam(defaultValue = "10") Integer size) {
-        log.info("ItemRequestController: GET_request findItemRequestByRequestorId() userID = {}, from = {}, size ={}", userId, from, size);
+        log.info(" ItemRequestController: GET_request findItemRequestByRequestorId() userID = {}, from = {}, size ={}", userId, from, size);
         return itemRequestService.findItemRequestByRequestorId(userId, from, size);
     }
 
@@ -46,7 +46,7 @@ public class ItemRequestController {
     @GetMapping("/{requestId}")
     public ItemRequestDto findItemRequestById(@RequestHeader("X-Sharer-User-Id") long userId,
                                               @PathVariable long requestId) {
-        log.info("ItemRequestController: GET_request findItemRequestById() userID = {}, requestId = {}", userId, requestId);
+        log.info(" ItemRequestController: GET_request findItemRequestById() userID = {}, requestId = {}", userId, requestId);
         return itemRequestService.findItemById(userId, requestId);
     }
 }

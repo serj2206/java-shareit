@@ -11,26 +11,11 @@ import java.util.NoSuchElementException;
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleWrongParameterException(final WrongParameterException e) {
         log.warn("404 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage(), "Неверное значение");
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleValidationException(final ValidationException e) {
-        log.warn("409 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage(), "Неверный запрос");
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleRuntimeException(final RuntimeException e) {
-        log.warn("500 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage(), "Ошибка сервера");
     }
 
     @ExceptionHandler
@@ -46,4 +31,5 @@ public class ErrorHandler {
         log.warn("400 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage(), "Неверный запрос");
     }
+
 }

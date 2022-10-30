@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingService;
-import ru.practicum.shareit.booking.ValidationService;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
@@ -30,20 +29,18 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private final ValidationService validationService = new ValidationService();
 
     @Transactional
     @Override
     public BookingDto create(long bookerId, BookingDto bookingDto) {
-        //Проверка временных интервалов
-        validationService.validationBookingDataTime(bookingDto);
 
         User booker = userRepository.findById(bookerId).orElseThrow();
 
         Item item = itemRepository.findById(bookingDto.getItem().getId()).orElseThrow();
+
         //Проверка на доступность вещи
         if (item.getAvailable() == false) {
-            throw new BadRequestException("Вещь не доступна для заказа");
+            throw new BadRequestException("Вещь не доступна для заказа"); //Изменить исключение
         }
 
         if (item.getOwner().getId() == bookerId) {
@@ -69,7 +66,7 @@ public class BookingServiceImpl implements BookingService {
 
         if (approved == true) {
             if (booking.getStatus() == Status.APPROVED) {
-                throw new BadRequestException("Статус APPROVED уже установлен");
+                throw new BadRequestException("Статус APPROVED уже установлен");  //Изменить исключение
             } else {
                 booking.setStatus(Status.APPROVED);
             }
@@ -95,13 +92,7 @@ public class BookingServiceImpl implements BookingService {
         userRepository.findById(userId).orElseThrow();
         Page<Booking> bookingList;
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
-        Pageable pageable;
-
-        if (size == null) {
-            pageable = null;
-        } else {
-            pageable = FromSizeRequest.of(from, size, sortById);
-        }
+        Pageable pageable = FromSizeRequest.of(from, size, sortById);
 
         switch (state) {
             case "ALL":
@@ -117,11 +108,9 @@ public class BookingServiceImpl implements BookingService {
             case "PAST":
                 bookingList = bookingRepository.findAllBookingByBookerIdPast(userId, pageable);
                 break;
-            case "FUTURE":
-                bookingList = bookingRepository.findAllBookingByBookerIdFuture(userId, pageable);
-                break;
             default:
-                throw new BadRequestException("Unknown state: " + state);
+                // FUTURE
+                bookingList = bookingRepository.findAllBookingByBookerIdFuture(userId, pageable);
         }
 
         return bookingList
@@ -138,13 +127,7 @@ public class BookingServiceImpl implements BookingService {
 
         Page<Booking> bookingList;
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
-        Pageable pageable;
-
-        if (size == null) {
-            pageable = null;
-        } else {
-            pageable = FromSizeRequest.of(from, size, sortById);
-        }
+        Pageable pageable = FromSizeRequest.of(from, size, sortById);
 
         switch (state) {
             case "ALL":
@@ -160,11 +143,9 @@ public class BookingServiceImpl implements BookingService {
             case "PAST":
                 bookingList = bookingRepository.findAllBookingByOwnerIdPast(userId, pageable);
                 break;
-            case "FUTURE":
-                bookingList = bookingRepository.findAllBookingByOwnerIdFuture(userId, pageable);
-                break;
             default:
-                throw new BadRequestException("Unknown state: " + state);
+                // Тогда "FUTURE"
+                bookingList = bookingRepository.findAllBookingByOwnerIdFuture(userId, pageable);
         }
         return bookingList
                 .stream()

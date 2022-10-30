@@ -19,7 +19,7 @@ public class BookingController {
     @PostMapping
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                     @RequestBody BookingDto bookingDto) {
-        log.info("BookingController POST createBooking() userId = {}, bookingDto = {}", userId, bookingDto);
+        log.info(" BookingController POST createBooking() userId = {}, bookingDto = {}", userId, bookingDto);
         return bookingService.create(userId, bookingDto);
     }
 
@@ -27,14 +27,14 @@ public class BookingController {
     public BookingDto approved(@RequestHeader("X-Sharer-User-Id") long userId,
                                @PathVariable long bookingId,
                                @RequestParam boolean approved) {
-        log.info("BookingController PATCH createBooking() userId = {}, bookingId = {}, approved = {}", userId, bookingId, approved);
+        log.info(" BookingController PATCH createBooking() userId = {}, bookingId = {}, approved = {}", userId, bookingId, approved);
         return bookingService.approved(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDto findBookingById(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @PathVariable long bookingId) {
-        log.info("BookingController GET findBookingById() userId = {}, bookingId = {}", userId, bookingId);
+        log.info(" BookingController GET findBookingById() userId = {}, bookingId = {}", userId, bookingId);
         return bookingService.findBookingDtoById(bookingId, userId);
     }
 
@@ -43,7 +43,7 @@ public class BookingController {
                                                             @RequestParam(defaultValue = "ALL") String state,
                                                             @RequestParam(defaultValue = "1") Integer from,
                                                             @RequestParam(defaultValue = "10") Integer size) {
-        log.info("BookingController GET findAllBookingDtoByBooker() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
+        log.info(" BookingController GET findAllBookingDtoByBooker() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
         return bookingService.findAllBookingDtoByBookerId(userId, state, from, size);
     }
 
@@ -52,7 +52,7 @@ public class BookingController {
                                                            @RequestParam(defaultValue = "ALL") String state,
                                                            @RequestParam(defaultValue = "1") Integer from,
                                                            @RequestParam(defaultValue = "10") Integer size) {
-        log.info("BookingController GET findAllBookingDtoByOwner() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
+        log.info(" BookingController GET findAllBookingDtoByOwner() userId = {}, state = {}, from = {}, size = {}", userId, state, from, size);
         return bookingService.findAllBookingDtoByOwnerId(userId, state, from, size);
     }
 }
